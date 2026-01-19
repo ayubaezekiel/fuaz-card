@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form'
-import html2canvas from 'html2canvas'
+import { domToPng } from 'modern-screenshot'
 import { useRef, useState } from 'react'
 
 const FUAZ_GREEN = '#006837'
@@ -95,13 +95,15 @@ export function FUAZIDCardSuite() {
 
   const captureCard = async (ref: React.RefObject<HTMLDivElement | null>) => {
     if (!ref.current) return null
-    const canvas = await html2canvas(ref.current, {
-      scale: 2,
-      backgroundColor: '#ffffff',
-      logging: false,
-      useCORS: true,
-    })
-    return canvas.toDataURL('image/png')
+    try {
+      return await domToPng(ref.current, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+      })
+    } catch (err) {
+      console.error('Capture failed:', err)
+      throw err
+    }
   }
 
   const downloadCard = async (

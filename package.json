@@ -26,6 +26,7 @@
     "clsx": "^2.1.1",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.562.0",
+    "modern-screenshot": "^4.6.7",
     "nitro": "latest",
     "radix-ui": "^1.4.3",
     "react": "^19.2.0",
