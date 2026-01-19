@@ -108,13 +108,27 @@ export function FUAZIDCardSuite() {
     ref: React.RefObject<HTMLDivElement | null>,
     filename: string,
   ) => {
-    const dataUrl = await captureCard(ref)
-    if (!dataUrl) return
+    try {
+      console.log(`Starting capture for ${filename}...`)
+      const dataUrl = await captureCard(ref)
+      if (!dataUrl) {
+        throw new Error('Failed to capture card image')
+      }
 
-    const link = document.createElement('a')
-    link.download = filename
-    link.href = dataUrl
-    link.click()
+      console.log(`Triggering download for ${filename}...`)
+      const link = document.createElement('a')
+      link.download = filename
+      link.href = dataUrl
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      console.log(`Download triggered successfully for ${filename}`)
+    } catch (err) {
+      console.error(`Download failed for ${filename}:`, err)
+      alert(
+        `Failed to download card: ${err instanceof Error ? err.message : 'Unknown error'}`,
+      )
+    }
   }
 
   const sendToEntrustPrinter = async (
@@ -725,6 +739,42 @@ interface IDCardProps<T> {
   ) => Promise<void>
 }
 
+function DownloadButton({
+  onClick,
+  label,
+}: {
+  onClick: () => Promise<void>
+  label: string
+}) {
+  const [loading, setLoading] = useState(false)
+
+  const handleClick = async () => {
+    setLoading(true)
+    try {
+      await onClick()
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={loading}
+      className="mt-4 px-6 py-2.5 rounded-xl font-bold text-sm text-white transition-all shadow-md hover:shadow-lg bg-green-700 hover:bg-green-800 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+    >
+      {loading ? (
+        <>
+          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          Capturing...
+        </>
+      ) : (
+        label
+      )}
+    </button>
+  )
+}
+
 function StudentCard({
   data,
   frontRef,
@@ -893,12 +943,10 @@ function StudentCard({
             </div>
           </div>
         </div>
-        <button
+        <DownloadButton
           onClick={() => downloadCard(frontRef, 'FUAZ_Student_Front.png')}
-          className="mt-4 px-6 py-2.5 rounded-xl font-bold text-sm text-white transition-all shadow-md hover:shadow-lg bg-green-700 hover:bg-green-800"
-        >
-          Download Front PNG
-        </button>
+          label="Download Front PNG"
+        />
       </div>
 
       {/* Back */}
@@ -959,12 +1007,10 @@ function StudentCard({
             </div>
           </div>
         </div>
-        <button
+        <DownloadButton
           onClick={() => downloadCard(backRef, 'FUAZ_Student_Back.png')}
-          className="mt-4 px-6 py-2.5 rounded-xl font-bold text-sm text-white transition-all shadow-md hover:shadow-lg bg-green-700 hover:bg-green-800"
-        >
-          Download Back PNG
-        </button>
+          label="Download Back PNG"
+        />
       </div>
     </div>
   )
@@ -1136,12 +1182,10 @@ function StaffCard({
             </div>
           </div>
         </div>
-        <button
+        <DownloadButton
           onClick={() => downloadCard(frontRef, 'FUAZ_Staff_Front.png')}
-          className="mt-4 px-6 py-2.5 rounded-xl font-bold text-sm text-white transition-all shadow-md hover:shadow-lg bg-green-700 hover:bg-green-800"
-        >
-          Download Front PNG
-        </button>
+          label="Download Front PNG"
+        />
       </div>
 
       {/* Back */}
@@ -1203,12 +1247,10 @@ function StaffCard({
             </div>
           </div>
         </div>
-        <button
+        <DownloadButton
           onClick={() => downloadCard(backRef, 'FUAZ_Staff_Back.png')}
-          className="mt-4 px-6 py-2.5 rounded-xl font-bold text-sm text-white transition-all shadow-md hover:shadow-lg bg-green-700 hover:bg-green-800"
-        >
-          Download Back PNG
-        </button>
+          label="Download Back PNG"
+        />
       </div>
     </div>
   )
