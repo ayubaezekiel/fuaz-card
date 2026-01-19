@@ -96,7 +96,7 @@ export function FUAZIDCardSuite() {
   const captureCard = async (ref: React.RefObject<HTMLDivElement | null>) => {
     if (!ref.current) return null
     const canvas = await html2canvas(ref.current, {
-      scale: 3,
+      scale: 2,
       backgroundColor: '#ffffff',
       logging: false,
       useCORS: true,
@@ -743,8 +743,8 @@ function StudentCard({
           ref={frontRef}
           className="relative bg-white overflow-hidden flex flex-col shadow-2xl"
           style={{
-            width: '480px',
-            height: '760px',
+            width: '319px',
+            height: '505.5px',
             borderRadius: '11.25px',
           }}
         >
@@ -784,10 +784,10 @@ function StudentCard({
               className="w-9 h-9 bg-white rounded-full p-0.5 mb-1 object-contain"
             />
             <div className="flex flex-col items-center">
-              <div className="text-[9px] font-extrabold uppercase mb-0.5 leading-tight">
+              <div className="text-[7px] font-extrabold uppercase mb-0.5 leading-tight">
                 FEDERAL UNIVERSITY OF AGRICULTURE ZURU
               </div>
-              <div className="text-[8px] opacity-90 font-medium">
+              <div className="text-[6px] opacity-90 font-medium">
                 P.M.B 28, ZURU, KEBBI STATE
               </div>
             </div>
@@ -804,10 +804,10 @@ function StudentCard({
           {/* Content */}
           <div className="flex flex-col items-center flex-grow relative z-10 px-2.5 py-4 gap-2.5">
             {/* Photo Box */}
-            <div className="flex flex-col items-center w-25">
+            <div className="flex flex-col items-center w-20">
               <div
-                className="w-24 h-28 rounded-lg overflow-hidden bg-gray-200 mb-1.5"
-                style={{ border: `3px solid ${FUAZ_GREEN}` }}
+                className="w-20 h-24 rounded-lg overflow-hidden bg-gray-200 mb-1"
+                style={{ border: `2px solid ${FUAZ_GREEN}` }}
               >
                 <img
                   src={getPhotoUrl(data)}
@@ -817,16 +817,16 @@ function StudentCard({
               </div>
               <div className="text-center w-full pt-1">
                 <div
-                  className="text-base leading-none mb-1"
+                  className="text-sm leading-none mb-0.5"
                   style={{ fontFamily: "'Great Vibes', cursive" }}
                 >
                   {data.signature}
                 </div>
                 <div
-                  className="w-full mb-1"
+                  className="w-full mb-0.5"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
-                <div className="text-[7px] text-gray-600 font-bold uppercase">
+                <div className="text-[6px] text-gray-600 font-bold uppercase">
                   HOLDER'S SIGNATURE
                 </div>
               </div>
@@ -835,7 +835,7 @@ function StudentCard({
             {/* Details */}
             <div className="w-full flex flex-col items-center">
               <div
-                className="text-[15px] font-extrabold uppercase border-b border-gray-300 pb-1 mb-2 leading-tight text-center w-full"
+                className="text-[12px] font-extrabold uppercase border-b border-gray-300 pb-0.5 mb-1.5 leading-tight text-center w-full"
                 style={{ color: FUAZ_DARK }}
               >
                 {data.name}
@@ -843,9 +843,9 @@ function StudentCard({
 
               <div className="w-full flex flex-col gap-1.5">
                 {/* ID Centered */}
-                <div className="text-center border-b border-dashed border-gray-200 pb-1 mb-1">
+                <div className="text-center border-b border-dashed border-gray-200 pb-0.5 mb-0.5">
                   <div
-                    className="text-[14px] font-bold"
+                    className="text-[11px] font-bold"
                     style={{ color: FUAZ_GREEN }}
                   >
                     {data.id}
@@ -853,38 +853,38 @@ function StudentCard({
                 </div>
 
                 <div className="text-center w-full">
-                  <div className="text-[8px] font-bold text-gray-600 uppercase mb-0.5">
+                  <div className="text-[6px] font-bold text-gray-600 uppercase mb-0.5">
                     DEPT/UNIT
                   </div>
-                  <div className="text-[11.5px] font-bold leading-tight">
+                  <div className="text-[9px] font-bold leading-tight">
                     {data.dept}
                   </div>
                 </div>
 
                 <div className="text-center w-full">
-                  <div className="text-[8px] font-bold text-gray-600 uppercase mb-0.5">
+                  <div className="text-[6px] font-bold text-gray-600 uppercase mb-0.5">
                     NOK Number
                   </div>
-                  <div className="text-[11.5px] font-bold leading-tight">
+                  <div className="text-[9px] font-bold leading-tight">
                     {data.nok}
                   </div>
                 </div>
 
                 {/* Split Row */}
-                <div className="grid grid-cols-2 gap-2.5 w-full mt-2">
+                <div className="grid grid-cols-2 gap-2 w-full mt-1.5">
                   <div className="text-center">
-                    <div className="text-[8px] font-bold text-gray-600 uppercase mb-0.5">
+                    <div className="text-[6px] font-bold text-gray-600 uppercase mb-0.5">
                       BLOOD
                     </div>
-                    <div className="text-[11.5px] font-bold leading-tight text-red-700">
+                    <div className="text-[9px] font-bold leading-tight text-red-700">
                       {data.blood}
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-[8px] font-bold text-gray-600 uppercase mb-0.5">
+                    <div className="text-[6px] font-bold text-gray-600 uppercase mb-0.5">
                       VALID THRU
                     </div>
-                    <div className="text-[11.5px] font-bold leading-tight text-red-700">
+                    <div className="text-[9px] font-bold leading-tight text-red-700">
                       {data.valid}
                     </div>
                   </div>
@@ -916,7 +916,7 @@ function StudentCard({
           }}
         >
           <div
-            className="h-10 w-full relative z-10 mt-6"
+            className="h-8 w-full relative z-10 mt-4"
             style={{ backgroundColor: '#1a1a1a' }}
           />
 
@@ -929,8 +929,8 @@ function StudentCard({
           />
 
           <div className="px-5 py-4 flex flex-col flex-grow relative z-10">
-            <div className="text-[9px] font-extrabold leading-snug text-justify mb-5 mt-4">
-              <p className="mb-3">
+            <div className="text-[7px] font-extrabold leading-snug text-justify mb-4 mt-3">
+              <p className="mb-2">
                 This identity is not transferable. It must be produced at any
                 time if requested by any office of the University or authorized
                 person(s)
@@ -941,18 +941,18 @@ function StudentCard({
               </p>
             </div>
 
-            <div className="mt-auto text-center pb-6">
+            <div className="mt-auto text-center pb-4">
               <div className="inline-block text-center">
                 <img
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
                   alt="Registrar's Signature"
-                  className="h-[30px] opacity-90 mx-auto"
+                  className="h-[20px] opacity-90 mx-auto"
                 />
                 <div
-                  className="w-[140px] mx-auto my-1.5"
+                  className="w-[100px] mx-auto my-1"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
-                <div className="text-[8px] text-gray-700 font-extrabold uppercase">
+                <div className="text-[6px] text-gray-700 font-extrabold uppercase">
                   REGISTRAR'S SIGNATURE
                 </div>
               </div>
@@ -988,8 +988,8 @@ function StaffCard({
           ref={frontRef}
           className="relative bg-white overflow-hidden flex flex-col shadow-2xl"
           style={{
-            width: '760px',
-            height: '480px',
+            width: '505.5px',
+            height: '319px',
             borderRadius: '11.25px',
           }}
         >
@@ -1029,10 +1029,10 @@ function StaffCard({
               className="w-12 h-12 bg-white rounded-full p-0.5 object-contain"
             />
             <div className="flex flex-col items-start">
-              <div className="text-[12px] font-extrabold uppercase leading-tight">
+              <div className="text-[9px] font-extrabold uppercase leading-tight">
                 FEDERAL UNIVERSITY OF AGRICULTURE ZURU
               </div>
-              <div className="text-[10px] opacity-90 font-medium">
+              <div className="text-[7px] opacity-90 font-medium">
                 P.M.B 28, ZURU, KEBBI STATE, NIGERIA
               </div>
             </div>
@@ -1040,7 +1040,7 @@ function StaffCard({
 
           {/* Title Banner */}
           <div
-            className="p-1 text-center text-[12px] font-extrabold tracking-wider relative z-10"
+            className="p-1 text-center text-[9px] font-extrabold tracking-wider relative z-10"
             style={{ backgroundColor: FUAZ_GOLD }}
           >
             STAFF ID CARD
@@ -1049,10 +1049,10 @@ function StaffCard({
           {/* Content */}
           <div className="flex items-center flex-grow relative z-10 px-8 py-4 gap-8 justify-center">
             {/* Photo Box */}
-            <div className="flex flex-col items-center w-25 flex-shrink-0">
+            <div className="flex flex-col items-center w-20 flex-shrink-0">
               <div
-                className="w-24 h-28 rounded-xl overflow-hidden bg-gray-200 mb-2"
-                style={{ border: `3.5px solid ${FUAZ_GREEN}` }}
+                className="w-20 h-24 rounded-xl overflow-hidden bg-gray-200 mb-1.5"
+                style={{ border: `2.5px solid ${FUAZ_GREEN}` }}
               >
                 <img
                   src={getPhotoUrl(data)}
@@ -1062,16 +1062,16 @@ function StaffCard({
               </div>
               <div className="text-center w-full pt-1">
                 <div
-                  className="text-base leading-none mb-1 text-green-900"
+                  className="text-sm leading-none mb-0.5 text-green-900"
                   style={{ fontFamily: "'Great Vibes', cursive" }}
                 >
                   {data.signature}
                 </div>
                 <div
-                  className="w-full mb-1"
+                  className="w-full mb-0.5"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
-                <div className="text-[7.5px] text-gray-600 font-bold uppercase">
+                <div className="text-[6px] text-gray-600 font-bold uppercase">
                   HOLDER'S SIGNATURE
                 </div>
               </div>
@@ -1080,7 +1080,7 @@ function StaffCard({
             {/* Details */}
             <div className="flex-grow max-w-[65%] flex flex-col justify-center">
               <div
-                className="text-[17px] font-extrabold uppercase border-b-2 border-gray-100 pb-1.5 mb-3 leading-tight text-left"
+                className="text-[13px] font-extrabold uppercase border-b-2 border-gray-100 pb-1 mb-2 leading-tight text-left"
                 style={{ color: FUAZ_DARK }}
               >
                 {data.name}
@@ -1088,9 +1088,9 @@ function StaffCard({
 
               <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 w-full">
                 {/* ID Full Width */}
-                <div className="col-span-2 border-b border-dashed border-gray-200 pb-1 mb-1">
+                <div className="col-span-2 border-b border-dashed border-gray-200 pb-0.5 mb-0.5">
                   <div
-                    className="text-[15px] font-extrabold"
+                    className="text-[11px] font-extrabold"
                     style={{ color: FUAZ_GREEN }}
                   >
                     {data.id}
@@ -1098,37 +1098,37 @@ function StaffCard({
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[8.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
+                  <div className="text-[6.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
                     STATUS
                   </div>
-                  <div className="text-[12px] font-bold leading-tight">
+                  <div className="text-[9px] font-bold leading-tight">
                     {data.status}
                   </div>
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[8.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
+                  <div className="text-[6.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
                     BLOOD GROUP
                   </div>
-                  <div className="text-[12px] font-bold leading-tight text-red-700">
+                  <div className="text-[9px] font-bold leading-tight text-red-700">
                     {data.blood}
                   </div>
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[8.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
+                  <div className="text-[6.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
                     DEPT/UNIT
                   </div>
-                  <div className="text-[12px] font-bold leading-tight">
+                  <div className="text-[9px] font-bold leading-tight">
                     {data.dept}
                   </div>
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[8.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
+                  <div className="text-[6.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
                     NOK Number
                   </div>
-                  <div className="text-[12px] font-bold leading-tight">
+                  <div className="text-[9px] font-bold leading-tight">
                     {data.nok}
                   </div>
                 </div>
@@ -1153,8 +1153,8 @@ function StaffCard({
           ref={backRef}
           className="relative bg-white overflow-hidden flex flex-col shadow-2xl"
           style={{
-            width: '760px',
-            height: '480px',
+            width: '505.5px',
+            height: '319px',
             borderRadius: '11.25px',
           }}
         >
@@ -1172,8 +1172,8 @@ function StaffCard({
           />
 
           <div className="px-8 py-6 flex flex-col flex-grow relative z-10">
-            <div className="text-[10px] font-extrabold leading-relaxed text-justify mb-5 mt-4">
-              <p className="mb-3">
+            <div className="text-[8px] font-extrabold leading-relaxed text-justify mb-4 mt-3">
+              <p className="mb-2">
                 This identity is not transferable. It must be produced at any
                 time if requested by any office of the University or authorized
                 person(s)
@@ -1185,18 +1185,18 @@ function StaffCard({
               </p>
             </div>
 
-            <div className="mt-auto text-left pb-4">
+            <div className="mt-auto text-left pb-3">
               <div className="inline-block text-center">
                 <img
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
                   alt="Registrar's Signature"
-                  className="h-[35px] opacity-90 mx-auto"
+                  className="h-[25px] opacity-90 mx-auto"
                 />
                 <div
-                  className="w-[160px] my-1.5"
+                  className="w-[120px] my-1"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
-                <div className="text-[8.5px] text-gray-700 font-extrabold uppercase">
+                <div className="text-[7px] text-gray-700 font-extrabold uppercase">
                   REGISTRAR'S SIGNATURE
                 </div>
               </div>
