@@ -1,0 +1,1264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FUAZ ID Card Suite</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Great+Vibes&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+      :root {
+        --fuaz-green: #006837;
+        --fuaz-gold: #d4af37;
+        --fuaz-dark: #0f2b1d;
+        --card-width: 3.375in;
+        --card-height: 2.125in;
+        --scale-factor: 1.5;
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      body {
+        font-family: 'Montserrat', sans-serif;
+        background: #eef2f6;
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h1 {
+        color: var(--fuaz-dark);
+        text-align: center;
+        margin-bottom: 5px;
+      }
+      p.subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 40px;
+        font-size: 0.9rem;
+      }
+
+      /* LAYOUT GRID */
+      .suite-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        max-width: 1200px;
+        width: 100%;
+      }
+
+      .card-pair {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .section-title {
+        font-weight: 800;
+        color: var(--fuaz-green);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        border-bottom: 2px solid var(--fuaz-gold);
+        padding-bottom: 5px;
+      }
+
+      .label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #888;
+        margin-bottom: 5px;
+      }
+
+      /* CARD BASE */
+      .id-card {
+        position: relative;
+        background-color: #fff;
+        border-radius: calc(10px * 0.75);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Dimensions & Scaling */
+      .portrait {
+        width: calc(var(--card-height) * var(--scale-factor));
+        height: calc(var(--card-width) * var(--scale-factor));
+      }
+      .landscape {
+        width: calc(var(--card-width) * var(--scale-factor));
+        height: calc(var(--card-height) * var(--scale-factor));
+      }
+
+      /* COMMON ELEMENTS */
+      .security-bg {
+        position: absolute;
+        inset: 0;
+        opacity: 0.07;
+        z-index: 0;
+        background-image: repeating-linear-gradient(
+          45deg,
+          var(--fuaz-green) 0,
+          var(--fuaz-green) 1px,
+          transparent 0,
+          transparent 50%
+        );
+        background-size: 20px 20px;
+      }
+
+      .watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60%;
+        opacity: 0.065;
+        z-index: 0;
+        filter: grayscale(100%);
+      }
+
+      /* HEADER */
+      .card-header {
+        background: var(--fuaz-dark);
+        color: white;
+        padding: 8px 5px;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        border-bottom: 4px solid var(--fuaz-gold);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Landscape Header Specifics */
+      .landscape .card-header {
+        flex-direction: row;
+        padding: 8px 15px;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .staff-card-header {
+        background: var(--fuaz-green);
+      }
+
+      .uni-logo {
+        width: 35px;
+        height: 35px;
+        background: white;
+        border-radius: 50%;
+        padding: 2px;
+        margin-bottom: 4px;
+        object-fit: contain;
+      }
+
+      .landscape .uni-logo {
+        margin-bottom: 0;
+        width: 45px;
+        height: 45px;
+      }
+
+      .header-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .landscape .header-text {
+        align-items: flex-start;
+      }
+
+      .uni-name {
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+        line-height: 1.2;
+      }
+      .landscape .uni-name {
+        font-size: 11px;
+      }
+
+      .uni-address {
+        font-size: 8px;
+        opacity: 0.9;
+        font-weight: 500;
+      }
+      .landscape .uni-address {
+        font-size: 10px;
+      }
+
+      /* TITLE BANNER */
+      .card-title-banner {
+        background: var(--fuaz-gold);
+        padding: 4px;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* --- CONTENT AREAS --- */
+
+      /* Shared Flex Logic */
+      .staff-content {
+        display: flex;
+        position: relative;
+        z-index: 2;
+        flex-grow: 1;
+        width: 100%;
+        align-items: center;
+      }
+
+      /* LANDSCAPE SPECIFIC (STAFF) */
+      .landscape .staff-content {
+        justify-content: center;
+        padding: 10px 0;
+        gap: 25px;
+      }
+
+      .landscape .staff-details {
+        flex: 0 0 65%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: left;
+      }
+
+      /* PORTRAIT SPECIFIC (STUDENT) */
+      .portrait .staff-content {
+        flex-direction: column;
+        padding: 15px 10px;
+        gap: 10px;
+        justify-content: flex-start;
+      }
+
+      .portrait .staff-details {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* PHOTOS */
+      .staff-photo-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100px;
+        flex-shrink: 0;
+      }
+
+      .staff-photo-frame {
+        width: 95px;
+        height: 110px;
+        border: 3px solid var(--fuaz-green);
+        border-radius: 8px;
+        overflow: hidden;
+        background: #eee;
+        margin-bottom: 5px;
+      }
+
+      .staff-photo-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* TEXT ELEMENTS */
+      .staff-name-large {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--fuaz-dark);
+        text-transform: uppercase;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 4px;
+        margin-bottom: 8px;
+        line-height: 1.2;
+      }
+
+      /* Landscape Align */
+      .landscape .staff-name-large {
+        text-align: left;
+      }
+      /* Portrait Align */
+      .portrait .staff-name-large {
+        text-align: center;
+        font-size: 15px;
+        width: 100%;
+      }
+
+      /* GRIDS */
+      .staff-grid {
+        display: grid;
+        width: 100%;
+        gap: 6px 12px;
+      }
+
+      .landscape .staff-grid {
+        grid-template-columns: 1.2fr 1fr;
+      }
+      .portrait .staff-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      /* Row styling */
+      .staff-info-row {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .landscape .staff-info-row {
+        text-align: left;
+      }
+      .portrait .staff-info-row {
+        text-align: center;
+        width: 100%;
+      }
+
+      /* Span adjustments */
+      .span-full {
+        grid-column: span 1;
+        text-align: center;
+        border-bottom: 1px dashed #eee;
+        padding-bottom: 2px;
+        margin-bottom: 4px;
+      }
+
+      .landscape .span-full {
+        grid-column: span 2;
+        text-align: left;
+      }
+      .portrait .span-full {
+        text-align: center;
+      }
+
+      /* Portrait Split Row (for dates/blood group) */
+      .portrait-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        width: 100%;
+        margin-top: 5px;
+      }
+
+      .staff-label {
+        font-size: 8px;
+        font-weight: 700;
+        color: #666;
+        text-transform: uppercase;
+        margin-bottom: 1px;
+      }
+      .staff-value {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #000;
+        line-height: 1.1;
+      }
+
+      /* SIGNATURES */
+      .holder-signature {
+        text-align: center;
+        width: 100%;
+        padding-top: 2px;
+      }
+
+      .simulated-sig {
+        font-family: 'Great Vibes', cursive;
+        font-size: 16px;
+        color: #000;
+        line-height: 1;
+        margin-bottom: 2px;
+      }
+
+      .sig-line-draw {
+        border-top: 1px solid var(--fuaz-green);
+        width: 100%;
+        margin-bottom: 2px;
+      }
+
+      .label-tiny {
+        font-size: 7px;
+        color: #555;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      /* BACK SIDE */
+      .card-back {
+        background: white;
+      }
+
+      .mag-stripe {
+        height: 35px;
+        background: #1a1a1a;
+        width: 100%;
+        position: relative;
+        z-index: 2;
+      }
+
+      .landscape .mag-stripe {
+        margin-top: 20px;
+      }
+      .portrait .mag-stripe {
+        margin-top: 15px;
+      }
+
+      .back-content {
+        padding: 15px 20px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        position: relative;
+        z-index: 2;
+      }
+
+      .portrait .back-content {
+        padding: 10px 15px;
+      }
+
+      .disclaimer {
+        font-size: 9px;
+        font-weight: 800;
+        color: #000;
+        text-align: justify;
+        line-height: 1.4;
+        margin-bottom: 15px;
+      }
+
+      .portrait .disclaimer {
+        font-size: 8px;
+      }
+
+      .disclaimer p {
+        margin: 0 0 8px 0;
+      }
+
+      .back-signature-block {
+        margin-top: auto;
+        text-align: left;
+        padding-top: 8px;
+      }
+
+      .portrait .back-signature-block {
+        text-align: center;
+      }
+
+      .back-signature-block .sig-line-draw {
+        width: 140px;
+        margin: 4px 0;
+      }
+
+      /* DOWNLOAD BUTTON */
+      .download-btn {
+        background: var(--fuaz-green);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 104, 55, 0.3);
+        margin-top: 10px;
+      }
+
+      .download-btn:hover {
+        background: var(--fuaz-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 104, 55, 0.4);
+      }
+
+      .download-btn:active {
+        transform: translateY(0);
+      }
+
+      .download-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* PRINT */
+      @media print {
+        body {
+          background: white;
+          padding: 0;
+          display: block;
+        }
+        .suite-grid {
+          display: block;
+        }
+        .card-pair {
+          break-inside: avoid;
+          border: none;
+          box-shadow: none;
+          padding: 0;
+          margin-bottom: 20px;
+          display: block;
+        }
+        .id-card {
+          border: 1px solid #ddd;
+          box-shadow: none;
+          margin-bottom: 10px;
+          page-break-inside: avoid;
+        }
+        .portrait {
+          width: var(--card-height);
+          height: var(--card-width);
+        }
+        .landscape {
+          width: var(--card-width);
+          height: var(--card-height);
+        }
+        .subtitle,
+        h1,
+        .label,
+        .download-btn {
+          display: none;
+        }
+      }
+
+      /* FORM STYLES */
+      .form-container {
+        max-width: 1200px;
+        width: 100%;
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 40px;
+        border: 1px solid #eee;
+      }
+
+      .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 15px;
+      }
+
+      .form-header h2 {
+        margin: 0;
+        color: var(--fuaz-green);
+        font-size: 1.5rem;
+      }
+
+      .toggle-group {
+        display: flex;
+        background: #f0f0f0;
+        padding: 5px;
+        border-radius: 12px;
+        gap: 5px;
+      }
+
+      .toggle-btn {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 700;
+        font-family: inherit;
+        transition: all 0.3s ease;
+        background: transparent;
+        color: #666;
+      }
+
+      .toggle-btn.active {
+        background: white;
+        color: var(--fuaz-green);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-content {
+        display: none;
+      }
+
+      .form-content.active {
+        display: block;
+        animation: fadeIn 0.4s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .input-group label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #555;
+        text-transform: uppercase;
+      }
+
+      .input-group input {
+        padding: 12px 15px;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+      }
+
+      .input-group input:focus {
+        outline: none;
+        border-color: var(--fuaz-green);
+        background: #f9fffb;
+      }
+
+      /* PRINT FORCE */
+      @media print {
+        .form-container {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>FUAZ Identity Card Design Suite</h1>
+    <p class="subtitle">Student (Portrait) • Staff (Landscape)</p>
+
+    <!-- DATA ENTRY FORM -->
+    <div class="form-container">
+      <div class="form-header">
+        <h2>ID Card Information</h2>
+        <div class="toggle-group">
+          <button class="toggle-btn active" onclick="switchForm('student')">
+            Student
+          </button>
+          <button class="toggle-btn" onclick="switchForm('staff')">
+            Staff
+          </button>
+        </div>
+      </div>
+
+      <!-- Student Form -->
+      <div id="student-form" class="form-content active">
+        <div class="form-grid">
+          <div class="input-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              id="in-stu-name"
+              placeholder="FATIMA A. USMAN"
+              oninput="updateStu()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Matrix Number</label>
+            <input
+              type="text"
+              id="in-stu-id"
+              placeholder="FUAZ/23/AGR/0567"
+              oninput="updateStu()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Department</label>
+            <input
+              type="text"
+              id="in-stu-dept"
+              placeholder="AGRONOMY"
+              oninput="updateStu()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Next of Kin Number</label>
+            <input
+              type="text"
+              id="in-stu-nok"
+              placeholder="0803 123 4567"
+              oninput="updateStu()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Blood Group</label>
+            <input
+              type="text"
+              id="in-stu-blood"
+              placeholder="O+"
+              oninput="updateStu()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Valid Thru</label>
+            <input
+              type="text"
+              id="in-stu-valid"
+              placeholder="06/2027"
+              oninput="updateStu()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Avatar Seed (DiceBear)</label>
+            <input
+              type="text"
+              id="in-stu-photo"
+              placeholder="Fatima"
+              oninput="updateStu()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Upload Passport Image</label>
+            <input
+              type="file"
+              id="in-stu-file"
+              accept="image/*"
+              onchange="updateStu()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Signature Name</label>
+            <input
+              type="text"
+              id="in-stu-sig"
+              placeholder="Fatima.U"
+              oninput="updateStu()"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Staff Form -->
+      <div id="staff-form" class="form-content">
+        <div class="form-grid">
+          <div class="input-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              id="in-stf-name"
+              placeholder="DR. AMINU M. BELLO"
+              oninput="updateStf()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Staff ID</label>
+            <input
+              type="text"
+              id="in-stf-id"
+              placeholder="FUAZ/STF/00123"
+              oninput="updateStf()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Status / Designation</label>
+            <input
+              type="text"
+              id="in-stf-status"
+              placeholder="SENIOR LECTURER"
+              oninput="updateStf()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Department / Unit</label>
+            <input
+              type="text"
+              id="in-stf-dept"
+              placeholder="AGRIC ECONOMICS"
+              oninput="updateStf()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Next of Kin Number</label>
+            <input
+              type="text"
+              id="in-stf-nok"
+              placeholder="0803 555 9988"
+              oninput="updateStf()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Blood Group</label>
+            <input
+              type="text"
+              id="in-stf-blood"
+              placeholder="B+"
+              oninput="updateStf()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Avatar Seed (DiceBear)</label>
+            <input
+              type="text"
+              id="in-stf-photo"
+              placeholder="DrAminu"
+              oninput="updateStf()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Upload Passport Image</label>
+            <input
+              type="file"
+              id="in-stf-file"
+              accept="image/*"
+              onchange="updateStf()"
+            />
+          </div>
+          <div class="input-group">
+            <label>Signature Name</label>
+            <input
+              type="text"
+              id="in-stf-sig"
+              placeholder="A.M. Bello"
+              oninput="updateStf()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="suite-grid">
+      <!-- STUDENT CARD (PORTRAIT) -->
+      <div class="card-pair">
+        <div class="section-title">Student Identity</div>
+
+        <!-- Front -->
+        <div>
+          <div class="label">FRONT VIEW</div>
+          <div class="id-card portrait" id="student-front">
+            <div class="security-bg"></div>
+            <img
+              src="https://pub-cbe8d8c3c3be4b9babab89e5ee84db0d.r2.dev/fuaz.jpeg"
+              class="watermark"
+              style="top: 60%; left: 50%"
+              alt="Watermark"
+            />
+            <div class="card-header">
+              <img
+                src="https://pub-cbe8d8c3c3be4b9babab89e5ee84db0d.r2.dev/fuaz.jpeg"
+                alt="FUAZ Logo"
+                class="uni-logo"
+              />
+              <div class="header-text">
+                <div class="uni-name">
+                  FEDERAL UNIVERSITY OF AGRICULTURE ZURU
+                </div>
+                <div class="uni-address">P.M.B 28, ZURU, KEBBI STATE</div>
+              </div>
+            </div>
+            <div class="card-title-banner">STUDENT ID CARD</div>
+            <div class="staff-content">
+              <!-- Photo Box -->
+              <div class="staff-photo-box">
+                <div class="staff-photo-frame">
+                  <img
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Fatima"
+                    alt="Student"
+                    id="stu-photo"
+                  />
+                </div>
+                <div class="holder-signature">
+                  <div class="simulated-sig" id="stu-sig-text">Fatima.U</div>
+                  <div class="sig-line-draw"></div>
+                  <div class="label-tiny">HOLDER'S SIGNATURE</div>
+                </div>
+              </div>
+
+              <div class="staff-details">
+                <div class="staff-name-large" id="stu-name">
+                  FATIMA A. USMAN
+                </div>
+                <div class="staff-grid">
+                  <!-- ID Centered -->
+                  <div class="staff-info-row span-full">
+                    <div
+                      class="staff-value"
+                      id="stu-id"
+                      style="color: var(--fuaz-green); font-size: 14px"
+                    >
+                      FUAZ/23/AGR/0567
+                    </div>
+                  </div>
+
+                  <div class="staff-info-row">
+                    <div class="staff-label">DEPT/UNIT</div>
+                    <div class="staff-value" id="stu-dept">AGRONOMY</div>
+                  </div>
+
+                  <div class="staff-info-row">
+                    <div class="staff-label">NOK Number</div>
+                    <div class="staff-value" id="stu-nok">0803 123 4567</div>
+                  </div>
+
+                  <!-- Split Row for Dates/Blood -->
+                  <div class="portrait-split">
+                    <div class="staff-info-row">
+                      <div class="staff-label">BLOOD</div>
+                      <div
+                        class="staff-value"
+                        id="stu-blood"
+                        style="color: #d32f2f"
+                      >
+                        O+
+                      </div>
+                    </div>
+                    <div class="staff-info-row">
+                      <div class="staff-label">VALID THRU</div>
+                      <div
+                        class="staff-value"
+                        id="stu-valid"
+                        style="color: #d32f2f"
+                      >
+                        06/2027
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="download-btn"
+            onclick="downloadCard('student-front', 'FUAZ_Student_Front.png')"
+          >
+            Download PNG
+          </button>
+        </div>
+
+        <!-- Back -->
+        <div>
+          <div class="label">BACK VIEW</div>
+          <div class="id-card portrait card-back" id="student-back">
+            <div class="mag-stripe"></div>
+            <div class="security-bg"></div>
+            <div class="back-content">
+              <div class="disclaimer">
+                <p>
+                  This identity is not transferable. It must be produced at any
+                  time if requested by any office of the University or
+                  authorized person(s)
+                </p>
+                <p>
+                  Loss of this card must be reported immediately to the
+                  Registrar, FUAZ, P.M.B 28, Kebbi State, or to the nearest
+                  Police Station.
+                </p>
+              </div>
+
+              <div class="back-signature-block">
+                <div style="text-align: center; display: inline-block">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
+                    style="height: 25px; opacity: 0.9"
+                    alt="Reg Sig"
+                  />
+                  <div
+                    class="sig-line-draw"
+                    style="width: 120px; margin: 4px auto"
+                  ></div>
+                  <div class="label-tiny">REGISTRAR'S SIGNATURE</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="download-btn"
+            onclick="downloadCard('student-back', 'FUAZ_Student_Back.png')"
+          >
+            Download PNG
+          </button>
+        </div>
+      </div>
+
+      <!-- STAFF CARD (LANDSCAPE) -->
+      <div class="card-pair">
+        <div class="section-title">Staff Identity</div>
+
+        <!-- Front -->
+        <div>
+          <div class="label">FRONT VIEW</div>
+          <div class="id-card landscape" id="staff-front">
+            <div class="security-bg"></div>
+            <img
+              src="https://pub-cbe8d8c3c3be4b9babab89e5ee84db0d.r2.dev/fuaz.jpeg"
+              class="watermark"
+              style="left: 70%"
+              alt="Watermark"
+            />
+            <div class="card-header staff-card-header">
+              <img
+                src="https://pub-cbe8d8c3c3be4b9babab89e5ee84db0d.r2.dev/fuaz.jpeg"
+                alt="FUAZ Logo"
+                class="uni-logo"
+              />
+              <div class="header-text">
+                <div class="uni-name">
+                  FEDERAL UNIVERSITY OF AGRICULTURE ZURU
+                </div>
+                <div class="uni-address">
+                  P.M.B 28, ZURU, KEBBI STATE, NIGERIA
+                </div>
+              </div>
+            </div>
+            <div class="card-title-banner">STAFF ID CARD</div>
+            <div class="staff-content">
+              <!-- Photo Box -->
+              <div class="staff-photo-box">
+                <div class="staff-photo-frame">
+                  <img
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=DrAminu&clothing=blazerAndShirt"
+                    alt="Staff"
+                    id="stf-photo"
+                  />
+                </div>
+                <div class="holder-signature">
+                  <div class="simulated-sig" id="stf-sig-text">A.M. Bello</div>
+                  <div class="sig-line-draw"></div>
+                  <div class="label-tiny">HOLDER'S SIGNATURE</div>
+                </div>
+              </div>
+
+              <div class="staff-details">
+                <div class="staff-name-large" id="stf-name">
+                  DR. AMINU M. BELLO
+                </div>
+                <div class="staff-grid">
+                  <!-- ID Spans full width -->
+                  <div class="staff-info-row span-full">
+                    <div
+                      class="staff-value"
+                      id="stf-id"
+                      style="color: var(--fuaz-green); font-size: 14px"
+                    >
+                      FUAZ/STF/00123
+                    </div>
+                  </div>
+
+                  <!-- Two Column Data -->
+                  <div class="staff-info-row">
+                    <div class="staff-label">STATUS</div>
+                    <div class="staff-value" id="stf-status">
+                      SENIOR LECTURER
+                    </div>
+                  </div>
+                  <div class="staff-info-row">
+                    <div class="staff-label">BLOOD GROUP</div>
+                    <div
+                      class="staff-value"
+                      id="stf-blood"
+                      style="color: #d32f2f"
+                    >
+                      B+
+                    </div>
+                  </div>
+
+                  <div class="staff-info-row">
+                    <div class="staff-label">DEPT/UNIT</div>
+                    <div class="staff-value" id="stf-dept">AGRIC ECONOMICS</div>
+                  </div>
+                  <div class="staff-info-row">
+                    <div class="staff-label">NOK Number</div>
+                    <div class="staff-value" id="stf-nok">0803 555 9988</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="download-btn"
+            onclick="downloadCard('staff-front', 'FUAZ_Staff_Front.png')"
+          >
+            Download PNG
+          </button>
+        </div>
+
+        <!-- Back -->
+        <div>
+          <div class="label">BACK VIEW</div>
+          <div class="id-card landscape card-back" id="staff-back">
+            <div class="mag-stripe"></div>
+            <div class="security-bg"></div>
+            <div class="back-content">
+              <div class="disclaimer">
+                <p>
+                  This identity is not transferable. It must be produced at any
+                  time if requested by any office of the University or
+                  authorized person(s)
+                </p>
+                <p>
+                  Loss of this card must be reported immediately to the
+                  Registrar, Federal University of Agriculture Zuru, P.M.B 28,
+                  Kebbi State Nigeria, or to the nearest Police Station.
+                </p>
+              </div>
+
+              <div class="back-signature-block">
+                <div style="text-align: center; display: inline-block">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
+                    style="height: 25px; opacity: 0.9"
+                    alt="Reg Sig"
+                  />
+                  <div class="sig-line-draw"></div>
+                  <div class="label-tiny">REGISTRAR'S SIGNATURE</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="download-btn"
+            onclick="downloadCard('staff-back', 'FUAZ_Staff_Back.png')"
+          >
+            Download PNG
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function switchForm(type) {
+        // Update buttons
+        document.querySelectorAll('.toggle-btn').forEach((btn) => {
+          btn.classList.remove('active')
+          if (btn.textContent.toLowerCase() === type)
+            btn.classList.add('active')
+        })
+
+        // Update form content
+        document.querySelectorAll('.form-content').forEach((form) => {
+          form.classList.remove('active')
+        })
+        document.getElementById(`${type}-form`).classList.add('active')
+      }
+
+      function updateStu() {
+        const name =
+          document.getElementById('in-stu-name').value || 'FATIMA A. USMAN'
+        const id =
+          document.getElementById('in-stu-id').value || 'FUAZ/23/AGR/0567'
+        const dept = document.getElementById('in-stu-dept').value || 'AGRONOMY'
+        const nok =
+          document.getElementById('in-stu-nok').value || '0803 123 4567'
+        const blood = document.getElementById('in-stu-blood').value || 'O+'
+        const valid = document.getElementById('in-stu-valid').value || '06/2027'
+        const photoSeed =
+          document.getElementById('in-stu-photo').value || 'Fatima'
+        const sig = document.getElementById('in-stu-sig').value || 'Fatima.U'
+        const fileInput = document.getElementById('in-stu-file')
+
+        document.getElementById('stu-name').textContent = name
+        document.getElementById('stu-id').textContent = id
+        document.getElementById('stu-dept').textContent = dept
+        document.getElementById('stu-nok').textContent = nok
+        document.getElementById('stu-blood').textContent = blood
+        document.getElementById('stu-valid').textContent = valid
+        document.getElementById('stu-sig-text').textContent = sig
+
+        if (fileInput.files && fileInput.files[0]) {
+          const reader = new FileReader()
+          reader.onload = function (e) {
+            document.getElementById('stu-photo').src = e.target.result
+          }
+          reader.readAsDataURL(fileInput.files[0])
+        } else {
+          document.getElementById('stu-photo').src =
+            `https://api.dicebear.com/7.x/avataaars/svg?seed=${photoSeed}`
+        }
+      }
+
+      function updateStf() {
+        const name =
+          document.getElementById('in-stf-name').value || 'DR. AMINU M. BELLO'
+        const id =
+          document.getElementById('in-stf-id').value || 'FUAZ/STF/00123'
+        const status =
+          document.getElementById('in-stf-status').value || 'SENIOR LECTURER'
+        const dept =
+          document.getElementById('in-stf-dept').value || 'AGRIC ECONOMICS'
+        const nok =
+          document.getElementById('in-stf-nok').value || '0803 555 9988'
+        const blood = document.getElementById('in-stf-blood').value || 'B+'
+        const photoSeed =
+          document.getElementById('in-stf-photo').value || 'DrAminu'
+        const sig = document.getElementById('in-stf-sig').value || 'A.M. Bello'
+        const fileInput = document.getElementById('in-stf-file')
+
+        document.getElementById('stf-name').textContent = name
+        document.getElementById('stf-id').textContent = id
+        document.getElementById('stf-status').textContent = status
+        document.getElementById('stf-dept').textContent = dept
+        document.getElementById('stf-nok').textContent = nok
+        document.getElementById('stf-blood').textContent = blood
+        document.getElementById('stf-sig-text').textContent = sig
+
+        if (fileInput.files && fileInput.files[0]) {
+          const reader = new FileReader()
+          reader.onload = function (e) {
+            document.getElementById('stf-photo').src = e.target.result
+          }
+          reader.readAsDataURL(fileInput.files[0])
+        } else {
+          document.getElementById('stf-photo').src =
+            `https://api.dicebear.com/7.x/avataaars/svg?seed=${photoSeed}&clothing=blazerAndShirt`
+        }
+      }
+
+      function downloadCard(cardId, filename) {
+        const card = document.getElementById(cardId)
+        const button = event.target
+        const originalText = button.textContent
+        button.textContent = 'Generating...'
+        button.disabled = true
+
+        html2canvas(card, {
+          scale: 3,
+          backgroundColor: '#ffffff',
+          logging: false,
+          useCORS: true,
+        })
+          .then((canvas) => {
+            const link = document.createElement('a')
+            link.download = filename
+            link.href = canvas.toDataURL('image/png')
+            link.click()
+            button.textContent = originalText
+            button.disabled = false
+          })
+          .catch((err) => {
+            console.error('Download failed:', err)
+            button.textContent = 'Failed'
+            button.disabled = false
+          })
+      }
+    </script>
+  </body>
+</html>
