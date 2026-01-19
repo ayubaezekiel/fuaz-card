@@ -133,6 +133,31 @@ export function FUAZIDCardSuite() {
     }
   }
 
+  const printCard = async (ref: React.RefObject<HTMLDivElement | null>) => {
+    try {
+      const dataUrl = await captureCard(ref)
+      if (!dataUrl) throw new Error('Failed to capture card image')
+
+      const printWindow = window.open('', '_blank')
+      if (!printWindow) throw new Error('Could not open print window')
+
+      printWindow.document.write(`
+        <html>
+          <head><title>Print Preview</title></head>
+          <body style="margin:0; padding:0; display:flex; justify-content:center; align-items:center; min-height:100vh; background:#f0f0f0;">
+            <img src="${dataUrl}" style="max-width:100%; height:auto; box-shadow: 0 0 20px rgba(0,0,0,0.2);" onload="window.print();window.close();" />
+          </body>
+        </html>
+      `)
+      printWindow.document.close()
+    } catch (err) {
+      console.error('Print failed:', err)
+      alert(
+        `Failed to print: ${err instanceof Error ? err.message : 'Unknown error'}`,
+      )
+    }
+  }
+
   const sendToEntrustPrinter = async (
     frontRef: React.RefObject<HTMLDivElement | null>,
     backRef: React.RefObject<HTMLDivElement | null>,
@@ -693,6 +718,7 @@ export function FUAZIDCardSuite() {
             backRef={studentBackRef}
             getPhotoUrl={getPhotoUrl}
             downloadCard={downloadCard}
+            printCard={printCard}
           />
         )}
 
@@ -704,6 +730,7 @@ export function FUAZIDCardSuite() {
             backRef={staffBackRef}
             getPhotoUrl={getPhotoUrl}
             downloadCard={downloadCard}
+            printCard={printCard}
           />
         )}
       </div>
@@ -739,6 +766,7 @@ interface IDCardProps<T> {
     ref: React.RefObject<HTMLDivElement | null>,
     filename: string,
   ) => Promise<void>
+  printCard: (ref: React.RefObject<HTMLDivElement | null>) => Promise<void>
 }
 
 function DownloadButton({
@@ -771,7 +799,77 @@ function DownloadButton({
           Capturing...
         </>
       ) : (
-        label
+        <>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          {label}
+        </>
+      )}
+    </button>
+  )
+}
+
+function PrintButton({
+  onClick,
+  label,
+}: {
+  onClick: () => Promise<void>
+  label: string
+}) {
+  const [loading, setLoading] = useState(false)
+
+  const handleClick = async () => {
+    setLoading(true)
+    try {
+      await onClick()
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={loading}
+      className="mt-4 px-6 py-2.5 rounded-xl font-bold text-sm text-white transition-all shadow-md hover:shadow-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+    >
+      {loading ? (
+        <>
+          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          Preparing...
+        </>
+      ) : (
+        <>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          {label}
+        </>
       )}
     </button>
   )
@@ -783,11 +881,12 @@ function StudentCard({
   backRef,
   getPhotoUrl,
   downloadCard,
+  printCard,
 }: IDCardProps<StudentData>) {
   return (
     <div className="flex flex-wrap items-center justify-center gap-10 p-5 bg-white rounded-3xl shadow-lg mx-auto max-w-7xl">
       {/* Front */}
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center ">
         <div className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-widest text-center">
           Front View (Portrait)
         </div>
@@ -796,7 +895,7 @@ function StudentCard({
           className="relative bg-white overflow-hidden flex flex-col shadow-2xl"
           style={{
             width: '319px',
-            height: '505.5px',
+            height: '520px',
             borderRadius: '11.25px',
           }}
         >
@@ -811,7 +910,7 @@ function StudentCard({
 
           {/* Watermark */}
           <img
-            src="https://pub-cbe8d8c3c3be4b9babab89e5ee84db0d.r2.dev/fuaz.jpeg"
+            src="/fuaz.jpeg"
             className="absolute opacity-[0.065] z-0 grayscale"
             style={{
               top: '60%',
@@ -831,15 +930,15 @@ function StudentCard({
             }}
           >
             <img
-              src="https://pub-cbe8d8c3c3be4b9babab89e5ee84db0d.r2.dev/fuaz.jpeg"
+              src="/fuaz.jpeg"
               alt="FUAZ Logo"
               className="w-9 h-9 bg-white rounded-full p-0.5 mb-1 object-contain"
             />
-            <div className="flex flex-col items-center">
-              <div className="text-[7px] font-extrabold uppercase mb-0.5 leading-tight">
+            <div className="flex flex-col items-center whitespace-nowrap">
+              <div className="text-[12px] font-extrabold uppercase mb-0.5 leading-tight">
                 FEDERAL UNIVERSITY OF AGRICULTURE ZURU
               </div>
-              <div className="text-[6px] opacity-90 font-medium">
+              <div className="text-[10px] opacity-90 font-medium">
                 P.M.B 28, ZURU, KEBBI STATE
               </div>
             </div>
@@ -847,7 +946,7 @@ function StudentCard({
 
           {/* Title Banner */}
           <div
-            className="p-1 text-center text-[11px] font-extrabold tracking-wider relative z-10"
+            className="p-1 text-center text-[16px] font-extrabold tracking-wider relative z-10 whitespace-nowrap"
             style={{ backgroundColor: FUAZ_GOLD }}
           >
             STUDENT ID CARD
@@ -869,7 +968,7 @@ function StudentCard({
               </div>
               <div className="text-center w-full pt-1">
                 <div
-                  className="text-sm leading-none mb-0.5"
+                  className="text-base leading-none mb-0.5"
                   style={{ fontFamily: "'Great Vibes', cursive" }}
                 >
                   {data.signature}
@@ -878,16 +977,16 @@ function StudentCard({
                   className="w-full mb-0.5"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
-                <div className="text-[6px] text-gray-600 font-bold uppercase">
+                <div className="text-[10px] text-gray-600 font-bold uppercase whitespace-nowrap">
                   HOLDER'S SIGNATURE
                 </div>
               </div>
             </div>
 
             {/* Details */}
-            <div className="w-full flex flex-col items-center">
+            <div className="w-full flex flex-col items-center px-4">
               <div
-                className="text-[12px] font-extrabold uppercase border-b border-gray-300 pb-0.5 mb-1.5 leading-tight text-center w-full"
+                className="text-[19px] font-extrabold uppercase border-b border-gray-300 pb-0.5 mb-1.5 leading-tight text-center w-full whitespace-nowrap overflow-hidden text-ellipsis"
                 style={{ color: FUAZ_DARK }}
               >
                 {data.name}
@@ -897,46 +996,46 @@ function StudentCard({
                 {/* ID Centered */}
                 <div className="text-center border-b border-dashed border-gray-200 pb-0.5 mb-0.5">
                   <div
-                    className="text-[11px] font-bold"
+                    className="text-[17px] font-bold whitespace-nowrap"
                     style={{ color: FUAZ_GREEN }}
                   >
                     {data.id}
                   </div>
                 </div>
 
-                <div className="text-center w-full">
-                  <div className="text-[6px] font-bold text-gray-600 uppercase mb-0.5">
+                <div className="text-center w-full px-2">
+                  <div className="text-[11px] font-bold text-gray-600 uppercase mb-0.5 whitespace-nowrap">
                     DEPT/UNIT
                   </div>
-                  <div className="text-[9px] font-bold leading-tight">
+                  <div className="text-[14px] font-bold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                     {data.dept}
                   </div>
                 </div>
 
-                <div className="text-center w-full">
-                  <div className="text-[6px] font-bold text-gray-600 uppercase mb-0.5">
+                <div className="text-center w-full px-2">
+                  <div className="text-[11px] font-bold text-gray-600 uppercase mb-0.5 whitespace-nowrap">
                     NOK Number
                   </div>
-                  <div className="text-[9px] font-bold leading-tight">
+                  <div className="text-[14px] font-bold leading-tight whitespace-nowrap">
                     {data.nok}
                   </div>
                 </div>
 
                 {/* Split Row */}
-                <div className="grid grid-cols-2 gap-2 w-full mt-1.5">
+                <div className="grid grid-cols-2 gap-2 w-full mt-1.5 px-2">
                   <div className="text-center">
-                    <div className="text-[6px] font-bold text-gray-600 uppercase mb-0.5">
+                    <div className="text-[11px] font-bold text-gray-600 uppercase mb-0.5 whitespace-nowrap">
                       BLOOD
                     </div>
-                    <div className="text-[9px] font-bold leading-tight text-red-700">
+                    <div className="text-[14px] font-bold leading-tight text-red-700 whitespace-nowrap">
                       {data.blood}
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-[6px] font-bold text-gray-600 uppercase mb-0.5">
+                    <div className="text-[11px] font-bold text-gray-600 uppercase mb-0.5 whitespace-nowrap">
                       VALID THRU
                     </div>
-                    <div className="text-[9px] font-bold leading-tight text-red-700">
+                    <div className="text-[14px] font-bold leading-tight text-red-700 whitespace-nowrap">
                       {data.valid}
                     </div>
                   </div>
@@ -945,10 +1044,16 @@ function StudentCard({
             </div>
           </div>
         </div>
-        <DownloadButton
-          onClick={() => downloadCard(frontRef, 'FUAZ_Student_Front.png')}
-          label="Download Front PNG"
-        />
+        <div className="flex gap-3">
+          <DownloadButton
+            onClick={() => downloadCard(frontRef, 'FUAZ_Student_Front.png')}
+            label="Download PNG"
+          />
+          <PrintButton
+            onClick={() => printCard(frontRef)}
+            label="Print Front"
+          />
+        </div>
       </div>
 
       {/* Back */}
@@ -960,8 +1065,8 @@ function StudentCard({
           ref={backRef}
           className="relative bg-white overflow-hidden flex flex-col shadow-2xl"
           style={{
-            width: '480px',
-            height: '760px',
+            width: '319px',
+            height: '520px',
             borderRadius: '11.25px',
           }}
         >
@@ -979,7 +1084,7 @@ function StudentCard({
           />
 
           <div className="px-5 py-4 flex flex-col flex-grow relative z-10">
-            <div className="text-[7px] font-extrabold leading-snug text-justify mb-4 mt-3">
+            <div className="text-[16.5px] font-extrabold leading-snug text-justify mb-4 mt-3">
               <p className="mb-2">
                 This identity is not transferable. It must be produced at any
                 time if requested by any office of the University or authorized
@@ -992,27 +1097,30 @@ function StudentCard({
             </div>
 
             <div className="mt-auto text-center pb-4">
-              <div className="inline-block text-center">
+              <div className="inline-block text-center whitespace-nowrap">
                 <img
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
                   alt="Registrar's Signature"
-                  className="h-[20px] opacity-90 mx-auto"
+                  className="h-[35px] opacity-90 mx-auto"
                 />
                 <div
                   className="w-[100px] mx-auto my-1"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
-                <div className="text-[6px] text-gray-700 font-extrabold uppercase">
+                <div className="text-[11px] text-gray-700 font-extrabold uppercase">
                   REGISTRAR'S SIGNATURE
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <DownloadButton
-          onClick={() => downloadCard(backRef, 'FUAZ_Student_Back.png')}
-          label="Download Back PNG"
-        />
+        <div className="flex gap-3">
+          <DownloadButton
+            onClick={() => downloadCard(backRef, 'FUAZ_Student_Back.png')}
+            label="Download PNG"
+          />
+          <PrintButton onClick={() => printCard(backRef)} label="Print Back" />
+        </div>
       </div>
     </div>
   )
@@ -1024,6 +1132,7 @@ function StaffCard({
   backRef,
   getPhotoUrl,
   downloadCard,
+  printCard,
 }: IDCardProps<StaffData>) {
   return (
     <div className="flex flex-wrap items-center justify-center gap-10 p-5 bg-white rounded-3xl shadow-lg mx-auto max-w-7xl">
@@ -1052,7 +1161,7 @@ function StaffCard({
 
           {/* Watermark */}
           <img
-            src="https://pub-cbe8d8c3c3be4b9babab89e5ee84db0d.r2.dev/fuaz.jpeg"
+            src="/fuaz.jpeg"
             className="absolute opacity-[0.065] z-0 grayscale"
             style={{
               top: '50%',
@@ -1072,15 +1181,15 @@ function StaffCard({
             }}
           >
             <img
-              src="https://pub-cbe8d8c3c3be4b9babab89e5ee84db0d.r2.dev/fuaz.jpeg"
+              src="/fuaz.jpeg"
               alt="FUAZ Logo"
               className="w-12 h-12 bg-white rounded-full p-0.5 object-contain"
             />
-            <div className="flex flex-col items-start">
-              <div className="text-[9px] font-extrabold uppercase leading-tight">
+            <div className="flex flex-col items-start whitespace-nowrap">
+              <div className="text-[14px] font-extrabold uppercase leading-tight">
                 FEDERAL UNIVERSITY OF AGRICULTURE ZURU
               </div>
-              <div className="text-[7px] opacity-90 font-medium">
+              <div className="text-[11px] opacity-90 font-medium">
                 P.M.B 28, ZURU, KEBBI STATE, NIGERIA
               </div>
             </div>
@@ -1088,7 +1197,7 @@ function StaffCard({
 
           {/* Title Banner */}
           <div
-            className="p-1 text-center text-[9px] font-extrabold tracking-wider relative z-10"
+            className="p-1 text-center text-[14px] font-extrabold tracking-wider relative z-10 whitespace-nowrap"
             style={{ backgroundColor: FUAZ_GOLD }}
           >
             STAFF ID CARD
@@ -1110,7 +1219,7 @@ function StaffCard({
               </div>
               <div className="text-center w-full pt-1">
                 <div
-                  className="text-sm leading-none mb-0.5 text-green-900"
+                  className="text-base leading-none mb-0.5 text-green-900"
                   style={{ fontFamily: "'Great Vibes', cursive" }}
                 >
                   {data.signature}
@@ -1119,7 +1228,7 @@ function StaffCard({
                   className="w-full mb-0.5"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
-                <div className="text-[6px] text-gray-600 font-bold uppercase">
+                <div className="text-[11px] text-gray-600 font-bold uppercase whitespace-nowrap">
                   HOLDER'S SIGNATURE
                 </div>
               </div>
@@ -1128,7 +1237,7 @@ function StaffCard({
             {/* Details */}
             <div className="flex-grow max-w-[65%] flex flex-col justify-center">
               <div
-                className="text-[13px] font-extrabold uppercase border-b-2 border-gray-100 pb-1 mb-2 leading-tight text-left"
+                className="text-[21px] font-extrabold uppercase border-b-2 border-gray-100 pb-1 mb-2 leading-tight text-left whitespace-nowrap overflow-hidden text-ellipsis"
                 style={{ color: FUAZ_DARK }}
               >
                 {data.name}
@@ -1138,7 +1247,7 @@ function StaffCard({
                 {/* ID Full Width */}
                 <div className="col-span-2 border-b border-dashed border-gray-200 pb-0.5 mb-0.5">
                   <div
-                    className="text-[11px] font-extrabold"
+                    className="text-[19px] font-extrabold whitespace-nowrap"
                     style={{ color: FUAZ_GREEN }}
                   >
                     {data.id}
@@ -1146,37 +1255,37 @@ function StaffCard({
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[6.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
+                  <div className="text-[11px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide whitespace-nowrap">
                     STATUS
                   </div>
-                  <div className="text-[9px] font-bold leading-tight">
+                  <div className="text-[15px] font-bold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                     {data.status}
                   </div>
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[6.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
+                  <div className="text-[11px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide whitespace-nowrap">
                     BLOOD GROUP
                   </div>
-                  <div className="text-[9px] font-bold leading-tight text-red-700">
+                  <div className="text-[15px] font-bold leading-tight text-red-700 whitespace-nowrap">
                     {data.blood}
                   </div>
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[6.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
+                  <div className="text-[11px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide whitespace-nowrap">
                     DEPT/UNIT
                   </div>
-                  <div className="text-[9px] font-bold leading-tight">
+                  <div className="text-[15px] font-bold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                     {data.dept}
                   </div>
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[6.5px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide">
+                  <div className="text-[11px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide whitespace-nowrap">
                     NOK Number
                   </div>
-                  <div className="text-[9px] font-bold leading-tight">
+                  <div className="text-[15px] font-bold leading-tight whitespace-nowrap">
                     {data.nok}
                   </div>
                 </div>
@@ -1184,10 +1293,16 @@ function StaffCard({
             </div>
           </div>
         </div>
-        <DownloadButton
-          onClick={() => downloadCard(frontRef, 'FUAZ_Staff_Front.png')}
-          label="Download Front PNG"
-        />
+        <div className="flex gap-3">
+          <DownloadButton
+            onClick={() => downloadCard(frontRef, 'FUAZ_Staff_Front.png')}
+            label="Download PNG"
+          />
+          <PrintButton
+            onClick={() => printCard(frontRef)}
+            label="Print Front"
+          />
+        </div>
       </div>
 
       {/* Back */}
@@ -1218,7 +1333,7 @@ function StaffCard({
           />
 
           <div className="px-8 py-6 flex flex-col flex-grow relative z-10">
-            <div className="text-[8px] font-extrabold leading-relaxed text-justify mb-4 mt-3">
+            <div className="text-[13px] font-extrabold leading-relaxed text-justify mb-4 mt-3">
               <p className="mb-2">
                 This identity is not transferable. It must be produced at any
                 time if requested by any office of the University or authorized
@@ -1232,27 +1347,30 @@ function StaffCard({
             </div>
 
             <div className="mt-auto text-left pb-3">
-              <div className="inline-block text-center">
+              <div className="inline-block text-center whitespace-nowrap">
                 <img
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
                   alt="Registrar's Signature"
-                  className="h-[25px] opacity-90 mx-auto"
+                  className="h-[45px] opacity-90 mx-auto"
                 />
                 <div
                   className="w-[120px] my-1"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
-                <div className="text-[7px] text-gray-700 font-extrabold uppercase">
+                <div className="text-[11px] text-gray-700 font-extrabold uppercase">
                   REGISTRAR'S SIGNATURE
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <DownloadButton
-          onClick={() => downloadCard(backRef, 'FUAZ_Staff_Back.png')}
-          label="Download Back PNG"
-        />
+        <div className="flex gap-3">
+          <DownloadButton
+            onClick={() => downloadCard(backRef, 'FUAZ_Staff_Back.png')}
+            label="Download PNG"
+          />
+          <PrintButton onClick={() => printCard(backRef)} label="Print Back" />
+        </div>
       </div>
     </div>
   )
