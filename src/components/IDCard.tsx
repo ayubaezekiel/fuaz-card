@@ -840,7 +840,7 @@ function StudentCard({
             <img
               src="/fuaz.jpeg"
               alt="FUAZ Logo"
-              className="w-7 h-7 bg-white rounded-full p-0.5 mb-0.5 object-contain"
+              className="w-7 h-7 bg-white rounded-full p-0.5 mb-0.5 object-contain mt-2"
             />
             <div className="flex flex-col items-center whitespace-nowrap">
               <div className="text-[11px] font-extrabold uppercase mb-0 leading-tight">
@@ -992,7 +992,7 @@ function StudentCard({
           />
 
           <div className="px-[18.75px] py-4 flex flex-col flex-grow relative z-10">
-            <div className="text-[16.5px] font-extrabold leading-snug text-justify mb-4 mt-3">
+            <div className="text-[12px] font-extrabold leading-snug px-3 text-justify mb-4 mt-3">
               <p className="mb-2">
                 This identity is not transferable. It must be produced at any
                 time if requested by any office of the University or authorized
