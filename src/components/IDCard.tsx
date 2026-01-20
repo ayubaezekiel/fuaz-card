@@ -34,7 +34,6 @@ type CardData = StudentData | StaffData
 
 export function FUAZIDCardSuite() {
   const [activeForm, setActiveForm] = useState<'student' | 'staff'>('student')
-  const [isPrinting, setIsPrinting] = useState(false)
   const [studentData, setStudentData] = useState<StudentData>({
     name: 'FATIMA A. USMAN',
     id: 'FUAZ/23/AGR/0567',
@@ -158,55 +157,6 @@ export function FUAZIDCardSuite() {
     }
   }
 
-  const sendToEntrustPrinter = async (
-    frontRef: React.RefObject<HTMLDivElement | null>,
-    backRef: React.RefObject<HTMLDivElement | null>,
-    data: CardData,
-  ) => {
-    setIsPrinting(true)
-    try {
-      const frontImage = await captureCard(frontRef)
-      const backImage = await captureCard(backRef)
-
-      if (!frontImage || !backImage) {
-        throw new Error('Could not capture card images')
-      }
-
-      const payload = {
-        printerType: 'Entrust',
-        timestamp: new Date().toISOString(),
-        cardData: {
-          name: data.name,
-          id: data.id,
-          dept: data.dept,
-        },
-        images: {
-          front: frontImage,
-          back: backImage,
-        },
-      }
-
-      // Simulated Entrust API call
-      const response = await fetch('http://localhost:8080/print', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-
-      if (!response.ok) {
-        throw new Error(`Printer returned error: ${response.statusText}`)
-      }
-
-      alert('Successfully sent to Entrust printer!')
-    } catch (err) {
-      console.error('Printing failed:', err)
-      alert(
-        `Printing failed: ${err instanceof Error ? err.message : 'Unknown error'}`,
-      )
-    } finally {
-      setIsPrinting(false)
-    }
-  }
 
   const getPhotoUrl = (data: CardData) => {
     if (data.photoFile) return data.photoFile
@@ -665,45 +615,6 @@ export function FUAZIDCardSuite() {
         )}
       </div>
 
-      <div className="max-w-6xl mx-auto flex justify-center mb-10">
-        <button
-          onClick={() => {
-            if (activeForm === 'student') {
-              sendToEntrustPrinter(studentFrontRef, studentBackRef, studentData)
-            } else {
-              sendToEntrustPrinter(staffFrontRef, staffBackRef, staffData)
-            }
-          }}
-          disabled={isPrinting}
-          className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg shadow-xl transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
-        >
-          {isPrinting ? (
-            <>
-              <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin" />
-              Processing Job...
-            </>
-          ) : (
-            <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                <rect x="6" y="14" width="12" height="8"></rect>
-              </svg>
-              Send to Entrust Printer
-            </>
-          )}
-        </button>
-      </div>
 
       {/* Cards Grid */}
       <div className="flex flex-col gap-10">
