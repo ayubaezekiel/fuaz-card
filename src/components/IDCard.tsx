@@ -15,6 +15,8 @@ interface StudentData {
   valid: string
   photoSeed: string
   photoFile: string | null
+  signatureFile: string | null
+  deanSignatureFile: string | null
   signature: string
 }
 
@@ -27,6 +29,8 @@ interface StaffData {
   blood: string
   photoSeed: string
   photoFile: string | null
+  signatureFile: string | null
+  deanSignatureFile: string | null
   signature: string
 }
 
@@ -43,7 +47,9 @@ export function FUAZIDCardSuite() {
     valid: '06/2027',
     photoSeed: 'Fatima',
     photoFile: null,
-    signature: 'Fatima.U',
+    signatureFile: null,
+    deanSignatureFile: null,
+    signature: 'FATIMA A. USMAN',
   })
 
   const [staffData, setStaffData] = useState<StaffData>({
@@ -55,7 +61,9 @@ export function FUAZIDCardSuite() {
     blood: 'B+',
     photoSeed: 'DrAminu',
     photoFile: null,
-    signature: 'A.M. Bello',
+    signatureFile: null,
+    deanSignatureFile: null,
+    signature: 'DR. AMINU M. BELLO',
   })
 
   const studentFrontRef = useRef<HTMLDivElement>(null)
@@ -77,15 +85,20 @@ export function FUAZIDCardSuite() {
     },
   })
 
-  const handleFileChange = (file: File | undefined, isStudent: boolean) => {
+  const handleFileChange = (
+    file: File | undefined,
+    type: 'photo' | 'signature' | 'deanSignature',
+    isStudent: boolean,
+  ) => {
     if (file) {
       const reader = new FileReader()
       reader.onload = (e) => {
         const result = e.target?.result as string
+        const field = type === 'photo' ? 'photoFile' : type === 'signature' ? 'signatureFile' : 'deanSignatureFile'
         if (isStudent) {
-          setStudentData((prev) => ({ ...prev, photoFile: result }))
+          setStudentData((prev) => ({ ...prev, [field]: result }))
         } else {
-          setStaffData((prev) => ({ ...prev, photoFile: result }))
+          setStaffData((prev) => ({ ...prev, [field]: result }))
         }
       }
       reader.readAsDataURL(file)
@@ -382,33 +395,34 @@ export function FUAZIDCardSuite() {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e.target.files?.[0], true)}
+                onChange={(e) => handleFileChange(e.target.files?.[0], 'photo', true)}
                 className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
               />
             </div>
 
-            <studentForm.Field name="signature">
-              {(field) => (
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-gray-600 uppercase">
-                    Signature Name
-                  </label>
-                  <input
-                    type="text"
-                    value={field.state.value}
-                    onChange={(e) => {
-                      field.handleChange(e.target.value)
-                      setStudentData((prev) => ({
-                        ...prev,
-                        signature: e.target.value,
-                      }))
-                    }}
-                    placeholder="Fatima.U"
-                    className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700 focus:bg-green-50"
-                  />
-                </div>
-              )}
-            </studentForm.Field>
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold text-gray-600 uppercase">
+                Upload Signature Image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e.target.files?.[0], 'signature', true)}
+                className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold text-gray-600 uppercase">
+                Upload Dean's Signature
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e.target.files?.[0], 'deanSignature', true)}
+                className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
+              />
+            </div>
           </form>
         )}
 
@@ -584,33 +598,34 @@ export function FUAZIDCardSuite() {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e.target.files?.[0], false)}
+                onChange={(e) => handleFileChange(e.target.files?.[0], 'photo', false)}
                 className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
               />
             </div>
 
-            <staffForm.Field name="signature">
-              {(field) => (
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-gray-600 uppercase">
-                    Signature Name
-                  </label>
-                  <input
-                    type="text"
-                    value={field.state.value}
-                    onChange={(e) => {
-                      field.handleChange(e.target.value)
-                      setStaffData((prev) => ({
-                        ...prev,
-                        signature: e.target.value,
-                      }))
-                    }}
-                    placeholder="A.M. Bello"
-                    className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700 focus:bg-green-50"
-                  />
-                </div>
-              )}
-            </staffForm.Field>
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold text-gray-600 uppercase">
+                Upload Signature Image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e.target.files?.[0], 'signature', false)}
+                className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold text-gray-600 uppercase">
+                Upload Dean's Signature
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e.target.files?.[0], 'deanSignature', false)}
+                className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
+              />
+            </div>
           </form>
         )}
       </div>
@@ -875,17 +890,23 @@ function StudentCard({
                 />
               </div>
               <div className="text-center w-full pt-1">
-                <div
-                  className="text-base leading-none mb-0.5"
-                  style={{ fontFamily: "'Great Vibes', cursive" }}
-                >
-                  {data.signature}
+                <div className="h-7 flex items-center justify-center mb-0.5">
+                  {data.signatureFile ? (
+                    <img src={data.signatureFile} alt="Signature" className="max-h-full object-contain" />
+                  ) : (
+                    <div
+                      className="text-base font-bold leading-none"
+                      style={{ fontFamily: "'Great Vibes', cursive" }}
+                    >
+                      {data.signature}
+                    </div>
+                  )}
                 </div>
                 <div
                   className="w-full mb-0.5"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
-                <div className="text-[8px] text-gray-600 font-bold uppercase whitespace-nowrap">
+                <div className="text-[8px] font-bold uppercase whitespace-nowrap">
                   HOLDER'S SIGNATURE
                 </div>
               </div>
@@ -904,7 +925,7 @@ function StudentCard({
                 {/* ID Centered */}
                 <div className="text-center border-b border-dashed border-gray-200 pb-0.5 mb-0.5">
                   <div
-                    className="text-[14px] font-bold whitespace-nowrap"
+                    className="text-[14px] font-extrabold whitespace-nowrap"
                     style={{ color: FUAZ_GREEN }}
                   >
                     {data.id}
@@ -912,19 +933,19 @@ function StudentCard({
                 </div>
 
                 <div className="text-center w-full">
-                  <div className="text-[9px] font-bold text-gray-600 uppercase mb-0 whitespace-nowrap">
+                  <div className="text-[9px] font-extrabold text-gray-600 uppercase mb-0 whitespace-nowrap">
                     DEPT/UNIT
                   </div>
-                  <div className="text-[11px] font-bold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
+                  <div className="text-[11px] font-extrabold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                     {data.dept}
                   </div>
                 </div>
 
                 <div className="text-center w-full">
-                  <div className="text-[9px] font-bold text-gray-600 uppercase mb-0 whitespace-nowrap">
+                  <div className="text-[9px] font-extrabold text-gray-600 uppercase mb-0 whitespace-nowrap">
                     NOK Number
                   </div>
-                  <div className="text-[11px] font-bold leading-tight whitespace-nowrap">
+                  <div className="text-[11px] font-extrabold leading-tight whitespace-nowrap">
                     {data.nok}
                   </div>
                 </div>
@@ -932,18 +953,18 @@ function StudentCard({
                 {/* Split Row */}
                 <div className="grid grid-cols-2 gap-2 w-full mt-0.5">
                   <div className="text-center">
-                    <div className="text-[9px] font-bold text-gray-600 uppercase mb-0 whitespace-nowrap">
+                    <div className="text-[9px] font-extrabold text-gray-600 uppercase mb-0 whitespace-nowrap">
                       BLOOD
                     </div>
-                    <div className="text-[11px] font-bold leading-tight text-red-700 whitespace-nowrap">
+                    <div className="text-[11px] font-extrabold leading-tight text-red-700 whitespace-nowrap">
                       {data.blood}
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-[9px] font-bold text-gray-600 uppercase mb-0 whitespace-nowrap">
+                    <div className="text-[9px] font-extrabold text-gray-600 uppercase mb-0 whitespace-nowrap">
                       VALID THRU
                     </div>
-                    <div className="text-[11px] font-bold leading-tight text-red-700 whitespace-nowrap">
+                    <div className="text-[11px] font-extrabold leading-tight text-red-700 whitespace-nowrap">
                       {data.valid}
                     </div>
                   </div>
@@ -954,7 +975,7 @@ function StudentCard({
         </div>
         <div className="flex gap-3">
           <DownloadButton
-            onClick={() => downloadCard(frontRef, 'FUAZ_Student_Front.png')}
+            onClick={() => downloadCard(frontRef, `${data.id}_FUAZ_Student_Front.png`)}
             label="Download PNG"
           />
           <PrintButton
@@ -999,24 +1020,30 @@ function StudentCard({
                 person(s)
               </p>
               <p className="mb-0">
-                Loss of this card must be reported immediately to the Registrar,
+                Loss of this card must be reported immediately to the Dean of Student Affairs,
                 FUAZ, P.M.B 28, Kebbi State, or to the nearest Police Station.
               </p>
             </div>
 
-            <div className="mt-auto text-center pb-4">
+            <div className="mt-auto text-center pb-8">
               <div className="inline-block text-center whitespace-nowrap">
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
-                  alt="Registrar's Signature"
-                  className="h-[35px] opacity-90 mx-auto"
-                />
+                <div className="h-[45px] flex items-center justify-center">
+                  {data.deanSignatureFile ? (
+                    <img src={data.deanSignatureFile} alt="Dean Signature" className="max-h-full object-contain mx-auto" />
+                  ) : (
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
+                      alt="Dean of Student Affairs Signature"
+                      className="h-[35px] opacity-90 mx-auto"
+                    />
+                  )}
+                </div>
                 <div
                   className="w-[100px] mx-auto my-1"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
                 <div className="text-[11px] text-gray-700 font-extrabold uppercase">
-                  REGISTRAR'S SIGNATURE
+                  DEAN OF STUDENT AFFAIRS SIGNATURE
                 </div>
               </div>
             </div>
@@ -1024,7 +1051,7 @@ function StudentCard({
         </div>
         <div className="flex gap-3">
           <DownloadButton
-            onClick={() => downloadCard(backRef, 'FUAZ_Student_Back.png')}
+            onClick={() => downloadCard(backRef, `${data.id}_FUAZ_Student_Back.png`)}
             label="Download PNG"
           />
           <PrintButton onClick={() => printCard(backRef)} label="Print Back" />
@@ -1126,11 +1153,17 @@ function StaffCard({
                 />
               </div>
               <div className="text-center w-full pt-0.5">
-                <div
-                  className="text-sm leading-none mb-0.5 text-green-900"
-                  style={{ fontFamily: "'Great Vibes', cursive" }}
-                >
-                  {data.signature}
+                <div className="h-7 flex items-center justify-center mb-0.5 text-green-900">
+                  {data.signatureFile ? (
+                    <img src={data.signatureFile} alt="Signature" className="max-h-full object-contain" />
+                  ) : (
+                    <div
+                      className="text-sm leading-none"
+                      style={{ fontFamily: "'Great Vibes', cursive" }}
+                    >
+                      {data.signature}
+                    </div>
+                  )}
                 </div>
                 <div
                   className="w-full mb-0.5"
@@ -1203,7 +1236,7 @@ function StaffCard({
         </div>
         <div className="flex gap-3">
           <DownloadButton
-            onClick={() => downloadCard(frontRef, 'FUAZ_Staff_Front.png')}
+            onClick={() => downloadCard(frontRef, `${data.id}_FUAZ_Staff_Front.png`)}
             label="Download PNG"
           />
           <PrintButton
@@ -1248,7 +1281,7 @@ function StaffCard({
                 person(s)
               </p>
               <p className="mb-0">
-                Loss of this card must be reported immediately to the Registrar,
+                Loss of this card must be reported immediately to the Dean of Student Affairs,
                 Federal University of Agriculture Zuru, P.M.B 28, Kebbi State
                 Nigeria, or to the nearest Police Station.
               </p>
@@ -1256,17 +1289,23 @@ function StaffCard({
 
             <div className="mt-auto text-left pb-3">
               <div className="inline-block text-center whitespace-nowrap">
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
-                  alt="Registrar's Signature"
-                  className="h-[45px] opacity-90 mx-auto"
-                />
+                <div className="h-[50px] flex items-center justify-center">
+                  {data.deanSignatureFile ? (
+                    <img src={data.deanSignatureFile} alt="Dean Signature" className="max-h-full object-contain mx-auto" />
+                  ) : (
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
+                      alt="Dean of Student Affairs Signature"
+                      className="h-[45px] opacity-90 mx-auto"
+                    />
+                  )}
+                </div>
                 <div
                   className="w-[120px] my-1"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
                 <div className="text-[11px] text-gray-700 font-extrabold uppercase">
-                  REGISTRAR'S SIGNATURE
+                  DEAN OF STUDENT AFFAIRS SIGNATURE
                 </div>
               </div>
             </div>
@@ -1274,7 +1313,7 @@ function StaffCard({
         </div>
         <div className="flex gap-3">
           <DownloadButton
-            onClick={() => downloadCard(backRef, 'FUAZ_Staff_Back.png')}
+            onClick={() => downloadCard(backRef, `${data.id}_FUAZ_Staff_Back.png`)}
             label="Download PNG"
           />
           <PrintButton onClick={() => printCard(backRef)} label="Print Back" />
