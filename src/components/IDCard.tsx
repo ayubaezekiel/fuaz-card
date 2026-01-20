@@ -210,9 +210,8 @@ export function FUAZIDCardSuite() {
 
   const getPhotoUrl = (data: CardData) => {
     if (data.photoFile) return data.photoFile
-    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.photoSeed}${
-      'status' in data ? '&clothing=blazerAndShirt' : ''
-    }`
+    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.photoSeed}${'status' in data ? '&clothing=blazerAndShirt' : ''
+      }`
   }
 
   return (
@@ -236,21 +235,19 @@ export function FUAZIDCardSuite() {
           <div className="flex bg-gray-100 p-1.5 rounded-xl gap-1.5">
             <button
               onClick={() => setActiveForm('student')}
-              className={`px-5 py-2 rounded-lg font-bold transition-all ${
-                activeForm === 'student'
-                  ? 'bg-white shadow-md text-green-800'
-                  : 'bg-transparent text-gray-600'
-              }`}
+              className={`px-5 py-2 rounded-lg font-bold transition-all ${activeForm === 'student'
+                ? 'bg-white shadow-md text-green-800'
+                : 'bg-transparent text-gray-600'
+                }`}
             >
               Student
             </button>
             <button
               onClick={() => setActiveForm('staff')}
-              className={`px-5 py-2 rounded-lg font-bold transition-all ${
-                activeForm === 'staff'
-                  ? 'bg-white shadow-md text-green-800'
-                  : 'bg-transparent text-gray-600'
-              }`}
+              className={`px-5 py-2 rounded-lg font-bold transition-all ${activeForm === 'staff'
+                ? 'bg-white shadow-md text-green-800'
+                : 'bg-transparent text-gray-600'
+                }`}
             >
               Staff
             </button>
@@ -894,9 +891,9 @@ function StudentCard({
           ref={frontRef}
           className="relative bg-white overflow-hidden flex flex-col shadow-2xl"
           style={{
-            width: '319px',
-            height: '520px',
-            borderRadius: '11.25px',
+            width: '318.75px',
+            height: '506.25px',
+            borderRadius: '18.75px',
           }}
         >
           {/* Security Background */}
@@ -923,22 +920,22 @@ function StudentCard({
 
           {/* Header */}
           <div
-            className="text-white p-2 text-center relative z-10 flex flex-col items-center"
+            className="text-white py-0.5 relative z-10 flex flex-col items-center"
             style={{
               backgroundColor: FUAZ_DARK,
-              borderBottom: `4px solid ${FUAZ_GOLD}`,
+              borderBottom: `2.5px solid ${FUAZ_GOLD}`,
             }}
           >
             <img
               src="/fuaz.jpeg"
               alt="FUAZ Logo"
-              className="w-9 h-9 bg-white rounded-full p-0.5 mb-1 object-contain"
+              className="w-7 h-7 bg-white rounded-full p-0.5 mb-0.5 object-contain"
             />
             <div className="flex flex-col items-center whitespace-nowrap">
-              <div className="text-[12px] font-extrabold uppercase mb-0.5 leading-tight">
+              <div className="text-[11px] font-extrabold uppercase mb-0 leading-tight">
                 FEDERAL UNIVERSITY OF AGRICULTURE ZURU
               </div>
-              <div className="text-[10px] opacity-90 font-medium">
+              <div className="text-[8px] opacity-90 font-medium">
                 P.M.B 28, ZURU, KEBBI STATE
               </div>
             </div>
@@ -946,18 +943,18 @@ function StudentCard({
 
           {/* Title Banner */}
           <div
-            className="p-1 text-center text-[16px] font-extrabold tracking-wider relative z-10 whitespace-nowrap"
+            className="py-0.5 text-center text-[13px] font-extrabold tracking-wider relative z-10 whitespace-nowrap"
             style={{ backgroundColor: FUAZ_GOLD }}
           >
             STUDENT ID CARD
           </div>
 
           {/* Content */}
-          <div className="flex flex-col items-center flex-grow relative z-10 px-2.5 py-4 gap-2.5">
+          <div className="flex flex-col items-center flex-grow relative z-10 px-[18.75px] py-1.5 gap-1">
             {/* Photo Box */}
-            <div className="flex flex-col items-center w-20">
+            <div className="flex flex-col items-center w-[140px]">
               <div
-                className="w-20 h-24 rounded-lg overflow-hidden bg-gray-200 mb-1"
+                className="w-[140px] h-[175px] rounded-xl overflow-hidden bg-gray-200 mb-0.5"
                 style={{ border: `2px solid ${FUAZ_GREEN}` }}
               >
                 <img
@@ -977,65 +974,65 @@ function StudentCard({
                   className="w-full mb-0.5"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
-                <div className="text-[10px] text-gray-600 font-bold uppercase whitespace-nowrap">
+                <div className="text-[8px] text-gray-600 font-bold uppercase whitespace-nowrap">
                   HOLDER'S SIGNATURE
                 </div>
               </div>
             </div>
 
             {/* Details */}
-            <div className="w-full flex flex-col items-center px-4">
+            <div className="w-full flex flex-col items-center">
               <div
-                className="text-[19px] font-extrabold uppercase border-b border-gray-300 pb-0.5 mb-1.5 leading-tight text-center w-full whitespace-nowrap overflow-hidden text-ellipsis"
+                className="text-[16px] font-extrabold uppercase border-b border-gray-300 pb-0.5 mb-1 leading-tight text-center w-full whitespace-nowrap overflow-hidden text-ellipsis"
                 style={{ color: FUAZ_DARK }}
               >
                 {data.name}
               </div>
 
-              <div className="w-full flex flex-col gap-1.5">
+              <div className="w-full flex flex-col gap-0.5">
                 {/* ID Centered */}
                 <div className="text-center border-b border-dashed border-gray-200 pb-0.5 mb-0.5">
                   <div
-                    className="text-[17px] font-bold whitespace-nowrap"
+                    className="text-[14px] font-bold whitespace-nowrap"
                     style={{ color: FUAZ_GREEN }}
                   >
                     {data.id}
                   </div>
                 </div>
 
-                <div className="text-center w-full px-2">
-                  <div className="text-[11px] font-bold text-gray-600 uppercase mb-0.5 whitespace-nowrap">
+                <div className="text-center w-full">
+                  <div className="text-[9px] font-bold text-gray-600 uppercase mb-0 whitespace-nowrap">
                     DEPT/UNIT
                   </div>
-                  <div className="text-[14px] font-bold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
+                  <div className="text-[11px] font-bold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                     {data.dept}
                   </div>
                 </div>
 
-                <div className="text-center w-full px-2">
-                  <div className="text-[11px] font-bold text-gray-600 uppercase mb-0.5 whitespace-nowrap">
+                <div className="text-center w-full">
+                  <div className="text-[9px] font-bold text-gray-600 uppercase mb-0 whitespace-nowrap">
                     NOK Number
                   </div>
-                  <div className="text-[14px] font-bold leading-tight whitespace-nowrap">
+                  <div className="text-[11px] font-bold leading-tight whitespace-nowrap">
                     {data.nok}
                   </div>
                 </div>
 
                 {/* Split Row */}
-                <div className="grid grid-cols-2 gap-2 w-full mt-1.5 px-2">
+                <div className="grid grid-cols-2 gap-2 w-full mt-0.5">
                   <div className="text-center">
-                    <div className="text-[11px] font-bold text-gray-600 uppercase mb-0.5 whitespace-nowrap">
+                    <div className="text-[9px] font-bold text-gray-600 uppercase mb-0 whitespace-nowrap">
                       BLOOD
                     </div>
-                    <div className="text-[14px] font-bold leading-tight text-red-700 whitespace-nowrap">
+                    <div className="text-[11px] font-bold leading-tight text-red-700 whitespace-nowrap">
                       {data.blood}
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-[11px] font-bold text-gray-600 uppercase mb-0.5 whitespace-nowrap">
+                    <div className="text-[9px] font-bold text-gray-600 uppercase mb-0 whitespace-nowrap">
                       VALID THRU
                     </div>
-                    <div className="text-[14px] font-bold leading-tight text-red-700 whitespace-nowrap">
+                    <div className="text-[11px] font-bold leading-tight text-red-700 whitespace-nowrap">
                       {data.valid}
                     </div>
                   </div>
@@ -1065,9 +1062,9 @@ function StudentCard({
           ref={backRef}
           className="relative bg-white overflow-hidden flex flex-col shadow-2xl"
           style={{
-            width: '319px',
-            height: '520px',
-            borderRadius: '11.25px',
+            width: '318.75px',
+            height: '506.25px',
+            borderRadius: '18.75px',
           }}
         >
           <div
@@ -1083,7 +1080,7 @@ function StudentCard({
             }}
           />
 
-          <div className="px-5 py-4 flex flex-col flex-grow relative z-10">
+          <div className="px-[18.75px] py-4 flex flex-col flex-grow relative z-10">
             <div className="text-[16.5px] font-extrabold leading-snug text-justify mb-4 mt-3">
               <p className="mb-2">
                 This identity is not transferable. It must be produced at any
@@ -1145,9 +1142,9 @@ function StaffCard({
           ref={frontRef}
           className="relative bg-white overflow-hidden flex flex-col shadow-2xl"
           style={{
-            width: '505.5px',
-            height: '319px',
-            borderRadius: '11.25px',
+            width: '506.25px',
+            height: '318.75px',
+            borderRadius: '18.75px',
           }}
         >
           {/* Security Background */}
@@ -1174,22 +1171,22 @@ function StaffCard({
 
           {/* Header */}
           <div
-            className="text-white p-2 px-6 relative z-10 flex items-center justify-center gap-3"
+            className="text-white py-1 px-6 relative z-10 flex items-center justify-center gap-2"
             style={{
               backgroundColor: FUAZ_GREEN,
-              borderBottom: `4px solid ${FUAZ_GOLD}`,
+              borderBottom: `3px solid ${FUAZ_GOLD}`,
             }}
           >
             <img
               src="/fuaz.jpeg"
               alt="FUAZ Logo"
-              className="w-12 h-12 bg-white rounded-full p-0.5 object-contain"
+              className="w-9 h-9 bg-white rounded-full p-0.5 object-contain"
             />
             <div className="flex flex-col items-start whitespace-nowrap">
-              <div className="text-[14px] font-extrabold uppercase leading-tight">
+              <div className="text-[13px] font-extrabold uppercase leading-tight">
                 FEDERAL UNIVERSITY OF AGRICULTURE ZURU
               </div>
-              <div className="text-[11px] opacity-90 font-medium">
+              <div className="text-[10px] opacity-90 font-medium">
                 P.M.B 28, ZURU, KEBBI STATE, NIGERIA
               </div>
             </div>
@@ -1197,19 +1194,19 @@ function StaffCard({
 
           {/* Title Banner */}
           <div
-            className="p-1 text-center text-[14px] font-extrabold tracking-wider relative z-10 whitespace-nowrap"
+            className="py-0.5 text-center text-[13px] font-extrabold tracking-wider relative z-10 whitespace-nowrap"
             style={{ backgroundColor: FUAZ_GOLD }}
           >
             STAFF ID CARD
           </div>
 
           {/* Content */}
-          <div className="flex items-center flex-grow relative z-10 px-8 py-4 gap-8 justify-center">
+          <div className="flex items-center flex-grow relative z-10 px-[18.75px] py-2 gap-5 justify-center">
             {/* Photo Box */}
-            <div className="flex flex-col items-center w-20 flex-shrink-0">
+            <div className="flex flex-col items-center w-[130px] flex-shrink-0">
               <div
-                className="w-20 h-24 rounded-xl overflow-hidden bg-gray-200 mb-1.5"
-                style={{ border: `2.5px solid ${FUAZ_GREEN}` }}
+                className="w-[130px] h-[162.5px] rounded-xl overflow-hidden bg-gray-200 mb-0.5"
+                style={{ border: `2px solid ${FUAZ_GREEN}` }}
               >
                 <img
                   src={getPhotoUrl(data)}
@@ -1217,9 +1214,9 @@ function StaffCard({
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="text-center w-full pt-1">
+              <div className="text-center w-full pt-0.5">
                 <div
-                  className="text-base leading-none mb-0.5 text-green-900"
+                  className="text-sm leading-none mb-0.5 text-green-900"
                   style={{ fontFamily: "'Great Vibes', cursive" }}
                 >
                   {data.signature}
@@ -1228,26 +1225,26 @@ function StaffCard({
                   className="w-full mb-0.5"
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
-                <div className="text-[11px] text-gray-600 font-bold uppercase whitespace-nowrap">
+                <div className="text-[8px] text-gray-600 font-bold uppercase whitespace-nowrap">
                   HOLDER'S SIGNATURE
                 </div>
               </div>
             </div>
 
             {/* Details */}
-            <div className="flex-grow max-w-[65%] flex flex-col justify-center">
+            <div className="flex-grow max-w-[60%] flex flex-col justify-center">
               <div
-                className="text-[21px] font-extrabold uppercase border-b-2 border-gray-100 pb-1 mb-2 leading-tight text-left whitespace-nowrap overflow-hidden text-ellipsis"
+                className="text-[19px] font-extrabold uppercase border-b-2 border-gray-100 pb-1 mb-1.5 leading-tight text-left whitespace-nowrap overflow-hidden text-ellipsis"
                 style={{ color: FUAZ_DARK }}
               >
                 {data.name}
               </div>
 
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 w-full">
+              <div className="grid grid-cols-2 gap-x-3 gap-y-2 w-full">
                 {/* ID Full Width */}
                 <div className="col-span-2 border-b border-dashed border-gray-200 pb-0.5 mb-0.5">
                   <div
-                    className="text-[19px] font-extrabold whitespace-nowrap"
+                    className="text-[17px] font-extrabold whitespace-nowrap"
                     style={{ color: FUAZ_GREEN }}
                   >
                     {data.id}
@@ -1255,37 +1252,37 @@ function StaffCard({
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[11px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide whitespace-nowrap">
+                  <div className="text-[10px] font-bold text-gray-500 uppercase mb-0 tracking-wide whitespace-nowrap">
                     STATUS
                   </div>
-                  <div className="text-[15px] font-bold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
+                  <div className="text-[13px] font-bold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                     {data.status}
                   </div>
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[11px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide whitespace-nowrap">
+                  <div className="text-[10px] font-bold text-gray-500 uppercase mb-0 tracking-wide whitespace-nowrap">
                     BLOOD GROUP
                   </div>
-                  <div className="text-[15px] font-bold leading-tight text-red-700 whitespace-nowrap">
+                  <div className="text-[13px] font-bold leading-tight text-red-700 whitespace-nowrap">
                     {data.blood}
                   </div>
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[11px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide whitespace-nowrap">
+                  <div className="text-[10px] font-bold text-gray-500 uppercase mb-0 tracking-wide whitespace-nowrap">
                     DEPT/UNIT
                   </div>
-                  <div className="text-[15px] font-bold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
+                  <div className="text-[13px] font-bold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                     {data.dept}
                   </div>
                 </div>
 
                 <div className="text-left">
-                  <div className="text-[11px] font-bold text-gray-500 uppercase mb-0.5 tracking-wide whitespace-nowrap">
+                  <div className="text-[10px] font-bold text-gray-500 uppercase mb-0 tracking-wide whitespace-nowrap">
                     NOK Number
                   </div>
-                  <div className="text-[15px] font-bold leading-tight whitespace-nowrap">
+                  <div className="text-[13px] font-bold leading-tight whitespace-nowrap">
                     {data.nok}
                   </div>
                 </div>
@@ -1314,9 +1311,9 @@ function StaffCard({
           ref={backRef}
           className="relative bg-white overflow-hidden flex flex-col shadow-2xl"
           style={{
-            width: '505.5px',
-            height: '319px',
-            borderRadius: '11.25px',
+            width: '506.25px',
+            height: '318.75px',
+            borderRadius: '18.75px',
           }}
         >
           <div
@@ -1332,7 +1329,7 @@ function StaffCard({
             }}
           />
 
-          <div className="px-8 py-6 flex flex-col flex-grow relative z-10">
+          <div className="px-[18.75px] py-6 flex flex-col flex-grow relative z-10">
             <div className="text-[13px] font-extrabold leading-relaxed text-justify mb-4 mt-3">
               <p className="mb-2">
                 This identity is not transferable. It must be produced at any
