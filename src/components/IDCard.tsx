@@ -30,7 +30,7 @@ interface StaffData {
   photoSeed: string
   photoFile: string | null
   signatureFile: string | null
-  deanSignatureFile: string | null
+  registrarSignatureFile: string | null
   signature: string
 }
 
@@ -62,7 +62,7 @@ export function FUAZIDCardSuite() {
     photoSeed: 'DrAminu',
     photoFile: null,
     signatureFile: null,
-    deanSignatureFile: null,
+    registrarSignatureFile: null,
     signature: 'DR. AMINU M. BELLO',
   })
 
@@ -87,14 +87,23 @@ export function FUAZIDCardSuite() {
 
   const handleFileChange = (
     file: File | undefined,
-    type: 'photo' | 'signature' | 'deanSignature',
+    type: 'photo' | 'signature' | 'deanSignature' | 'registrarSignature',
     isStudent: boolean,
   ) => {
     if (file) {
       const reader = new FileReader()
       reader.onload = (e) => {
         const result = e.target?.result as string
-        const field = type === 'photo' ? 'photoFile' : type === 'signature' ? 'signatureFile' : 'deanSignatureFile'
+        let field: string = ''
+
+        if (type === 'photo') {
+          field = 'photoFile'
+        } else if (type === 'signature') {
+          field = 'signatureFile'
+        } else {
+          field = isStudent ? 'deanSignatureFile' : 'registrarSignatureFile'
+        }
+
         if (isStudent) {
           setStudentData((prev) => ({ ...prev, [field]: result }))
         } else {
@@ -605,7 +614,7 @@ export function FUAZIDCardSuite() {
 
             <div className="flex flex-col gap-2">
               <label className="text-xs font-bold text-gray-600 uppercase">
-                Upload Signature Image
+                Upload Staff Signature Image
               </label>
               <input
                 type="file"
@@ -617,12 +626,12 @@ export function FUAZIDCardSuite() {
 
             <div className="flex flex-col gap-2">
               <label className="text-xs font-bold text-gray-600 uppercase">
-                Upload Dean's Signature
+                Upload Registrar's Signature
               </label>
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e.target.files?.[0], 'deanSignature', false)}
+                onChange={(e) => handleFileChange(e.target.files?.[0], 'registrarSignature', false)}
                 className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
               />
             </div>
@@ -1281,21 +1290,21 @@ function StaffCard({
                 person(s)
               </p>
               <p className="mb-0">
-                Loss of this card must be reported immediately to the Dean of Student Affairs,
+                Loss of this card must be reported immediately to the Registrar,
                 Federal University of Agriculture Zuru, P.M.B 28, Kebbi State
                 Nigeria, or to the nearest Police Station.
               </p>
             </div>
 
             <div className="mt-auto text-left pb-3">
-              <div className="inline-block text-center whitespace-nowrap">
+              <div className="inline-block whitespace-nowrap">
                 <div className="h-[50px] flex items-center justify-center">
-                  {data.deanSignatureFile ? (
-                    <img src={data.deanSignatureFile} alt="Dean Signature" className="max-h-full object-contain mx-auto" />
+                  {data.registrarSignatureFile ? (
+                    <img src={data.registrarSignatureFile} alt="Registrar's Signature" className="max-h-full object-contain mx-auto" />
                   ) : (
                     <img
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
-                      alt="Dean of Student Affairs Signature"
+                      alt="Registrar's Signature"
                       className="h-[45px] opacity-90 mx-auto"
                     />
                   )}
@@ -1305,7 +1314,7 @@ function StaffCard({
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
                 <div className="text-[11px] text-gray-700 font-extrabold uppercase">
-                  DEAN OF STUDENT AFFAIRS SIGNATURE
+                  REGISTRAR'S SIGNATURE
                 </div>
               </div>
             </div>
