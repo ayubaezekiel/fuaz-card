@@ -867,7 +867,7 @@ function StudentCard({
               className="w-7 h-7 bg-white rounded-full p-0.5 mb-0.5 object-contain mt-2"
             />
             <div className="flex flex-col items-center whitespace-nowrap">
-              <div className="text-[11px] font-extrabold uppercase mb-0 leading-tight">
+              <div className="text-[13px] font-extrabold uppercase mb-0 leading-tight">
                 FEDERAL UNIVERSITY OF AGRICULTURE ZURU
               </div>
               <div className="text-[8px] opacity-90 font-medium">
@@ -1029,7 +1029,7 @@ function StudentCard({
                 person(s)
               </p>
               <p className="mb-0">
-                Loss of this card must be reported immediately to the Dean of Student Affairs,
+                Loss of this card must be reported immediately to the Dean Student Affairs,
                 FUAZ, P.M.B 28, Kebbi State, or to the nearest Police Station.
               </p>
             </div>
@@ -1052,7 +1052,7 @@ function StudentCard({
                   style={{ borderTop: `1px solid ${FUAZ_GREEN}` }}
                 />
                 <div className="text-[11px] text-gray-700 font-extrabold uppercase">
-                  DEAN OF STUDENT AFFAIRS SIGNATURE
+                  DEAN STUDENT AFFAIRS SIGNATURE
                 </div>
               </div>
             </div>
