@@ -1,6 +1,7 @@
 import { useForm } from '@tanstack/react-form'
 import { domToPng } from 'modern-screenshot'
 import { useRef, useState } from 'react'
+import { Barcode } from './Barcode'
 
 const FUAZ_GREEN = '#006837'
 const FUAZ_GOLD = '#d4af37'
@@ -179,11 +180,11 @@ export function FUAZIDCardSuite() {
     }
   }
 
-
   const getPhotoUrl = (data: CardData) => {
     if (data.photoFile) return data.photoFile
-    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.photoSeed}${'status' in data ? '&clothing=blazerAndShirt' : ''
-      }`
+    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.photoSeed}${
+      'status' in data ? '&clothing=blazerAndShirt' : ''
+    }`
   }
 
   return (
@@ -207,19 +208,21 @@ export function FUAZIDCardSuite() {
           <div className="flex bg-gray-100 p-1.5 rounded-xl gap-1.5">
             <button
               onClick={() => setActiveForm('student')}
-              className={`px-5 py-2 rounded-lg font-bold transition-all ${activeForm === 'student'
-                ? 'bg-white shadow-md text-green-800'
-                : 'bg-transparent text-gray-600'
-                }`}
+              className={`px-5 py-2 rounded-lg font-bold transition-all ${
+                activeForm === 'student'
+                  ? 'bg-white shadow-md text-green-800'
+                  : 'bg-transparent text-gray-600'
+              }`}
             >
               Student
             </button>
             <button
               onClick={() => setActiveForm('staff')}
-              className={`px-5 py-2 rounded-lg font-bold transition-all ${activeForm === 'staff'
-                ? 'bg-white shadow-md text-green-800'
-                : 'bg-transparent text-gray-600'
-                }`}
+              className={`px-5 py-2 rounded-lg font-bold transition-all ${
+                activeForm === 'staff'
+                  ? 'bg-white shadow-md text-green-800'
+                  : 'bg-transparent text-gray-600'
+              }`}
             >
               Staff
             </button>
@@ -404,7 +407,9 @@ export function FUAZIDCardSuite() {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e.target.files?.[0], 'photo', true)}
+                onChange={(e) =>
+                  handleFileChange(e.target.files?.[0], 'photo', true)
+                }
                 className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
               />
             </div>
@@ -416,7 +421,9 @@ export function FUAZIDCardSuite() {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e.target.files?.[0], 'signature', true)}
+                onChange={(e) =>
+                  handleFileChange(e.target.files?.[0], 'signature', true)
+                }
                 className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
               />
             </div>
@@ -428,7 +435,9 @@ export function FUAZIDCardSuite() {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e.target.files?.[0], 'deanSignature', true)}
+                onChange={(e) =>
+                  handleFileChange(e.target.files?.[0], 'deanSignature', true)
+                }
                 className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
               />
             </div>
@@ -607,7 +616,9 @@ export function FUAZIDCardSuite() {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e.target.files?.[0], 'photo', false)}
+                onChange={(e) =>
+                  handleFileChange(e.target.files?.[0], 'photo', false)
+                }
                 className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
               />
             </div>
@@ -619,7 +630,9 @@ export function FUAZIDCardSuite() {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e.target.files?.[0], 'signature', false)}
+                onChange={(e) =>
+                  handleFileChange(e.target.files?.[0], 'signature', false)
+                }
                 className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
               />
             </div>
@@ -631,14 +644,19 @@ export function FUAZIDCardSuite() {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e.target.files?.[0], 'registrarSignature', false)}
+                onChange={(e) =>
+                  handleFileChange(
+                    e.target.files?.[0],
+                    'registrarSignature',
+                    false,
+                  )
+                }
                 className="px-4 py-3 border-2 border-gray-200 rounded-xl font-medium text-base transition-all focus:outline-none focus:border-green-700"
               />
             </div>
           </form>
         )}
       </div>
-
 
       {/* Cards Grid */}
       <div className="flex flex-col gap-10">
@@ -901,7 +919,11 @@ function StudentCard({
               <div className="text-center w-full pt-1">
                 <div className="h-7 flex items-center justify-center mb-0.5">
                   {data.signatureFile ? (
-                    <img src={data.signatureFile} alt="Signature" className="max-h-full object-contain" />
+                    <img
+                      src={data.signatureFile}
+                      alt="Signature"
+                      className="max-h-full object-contain"
+                    />
                   ) : (
                     <div
                       className="text-base font-bold leading-none"
@@ -984,7 +1006,9 @@ function StudentCard({
         </div>
         <div className="flex gap-3">
           <DownloadButton
-            onClick={() => downloadCard(frontRef, `${data.id}_FUAZ_Student_Front.png`)}
+            onClick={() =>
+              downloadCard(frontRef, `${data.id}_FUAZ_Student_Front.png`)
+            }
             label="Download PNG"
           />
           <PrintButton
@@ -1029,20 +1053,25 @@ function StudentCard({
                 person(s)
               </p>
               <p className="mb-0">
-                Loss of this card must be reported immediately to the Dean Student Affairs,
-                FUAZ, P.M.B 28, Kebbi State, or to the nearest Police Station.
+                Loss of this card must be reported immediately to the Dean
+                Student Affairs, FUAZ, P.M.B 28, Kebbi State, or to the nearest
+                Police Station.
               </p>
             </div>
 
-            <div className="mt-auto text-center pb-8">
-              <div className="inline-block text-center whitespace-nowrap">
+            <div className="mt-auto text-center pb-4">
+              <div className="inline-block text-center whitespace-nowrap mb-4">
                 <div className="h-[45px] flex items-center justify-center">
                   {data.deanSignatureFile ? (
-                    <img src={data.deanSignatureFile} alt="Dean Signature" className="max-h-full object-contain mx-auto" />
+                    <img
+                      src={data.deanSignatureFile}
+                      alt="Dean Signature"
+                      className="max-h-full object-contain mx-auto"
+                    />
                   ) : (
                     <img
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
-                      alt="Dean of Student Affairs Signature"
+                      alt=""
                       className="h-[35px] opacity-90 mx-auto"
                     />
                   )}
@@ -1055,12 +1084,21 @@ function StudentCard({
                   DEAN STUDENT AFFAIRS SIGNATURE
                 </div>
               </div>
+
+              <Barcode
+                value={data.id}
+                height={35}
+                width={1.0}
+                className="opacity-80"
+              />
             </div>
           </div>
         </div>
         <div className="flex gap-3">
           <DownloadButton
-            onClick={() => downloadCard(backRef, `${data.id}_FUAZ_Student_Back.png`)}
+            onClick={() =>
+              downloadCard(backRef, `${data.id}_FUAZ_Student_Back.png`)
+            }
             label="Download PNG"
           />
           <PrintButton onClick={() => printCard(backRef)} label="Print Back" />
@@ -1164,7 +1202,11 @@ function StaffCard({
               <div className="text-center w-full pt-0.5">
                 <div className="h-7 flex items-center justify-center mb-0.5 text-green-900">
                   {data.signatureFile ? (
-                    <img src={data.signatureFile} alt="Signature" className="max-h-full object-contain" />
+                    <img
+                      src={data.signatureFile}
+                      alt="Signature"
+                      className="max-h-full object-contain"
+                    />
                   ) : (
                     <div
                       className="text-sm leading-none"
@@ -1245,7 +1287,9 @@ function StaffCard({
         </div>
         <div className="flex gap-3">
           <DownloadButton
-            onClick={() => downloadCard(frontRef, `${data.id}_FUAZ_Staff_Front.png`)}
+            onClick={() =>
+              downloadCard(frontRef, `${data.id}_FUAZ_Staff_Front.png`)
+            }
             label="Download PNG"
           />
           <PrintButton
@@ -1296,15 +1340,19 @@ function StaffCard({
               </p>
             </div>
 
-            <div className="mt-auto text-left pb-3">
+            <div className="mt-auto flex items-end justify-between pb-3">
               <div className="inline-block whitespace-nowrap">
                 <div className="h-[50px] flex items-center justify-center">
                   {data.registrarSignatureFile ? (
-                    <img src={data.registrarSignatureFile} alt="Registrar's Signature" className="max-h-full object-contain mx-auto" />
+                    <img
+                      src={data.registrarSignatureFile}
+                      alt=""
+                      className="max-h-full object-contain mx-auto"
+                    />
                   ) : (
                     <img
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png"
-                      alt="Registrar's Signature"
+                      alt=""
                       className="h-[45px] opacity-90 mx-auto"
                     />
                   )}
@@ -1317,12 +1365,21 @@ function StaffCard({
                   REGISTRAR'S SIGNATURE
                 </div>
               </div>
+
+              <Barcode
+                value={data.id}
+                height={40}
+                width={1.2}
+                className="opacity-80 mb-1"
+              />
             </div>
           </div>
         </div>
         <div className="flex gap-3">
           <DownloadButton
-            onClick={() => downloadCard(backRef, `${data.id}_FUAZ_Staff_Back.png`)}
+            onClick={() =>
+              downloadCard(backRef, `${data.id}_FUAZ_Staff_Back.png`)
+            }
             label="Download PNG"
           />
           <PrintButton onClick={() => printCard(backRef)} label="Print Back" />
