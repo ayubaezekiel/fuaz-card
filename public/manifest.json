@@ -1,19 +1,19 @@
 {
-  "short_name": "TanStack App",
-  "name": "Create TanStack App Sample",
+  "short_name": "FUAZ ID card",
+  "name": "FUAZ ID card generator",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "fuaz.jpeg",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "fuaz.jpeg",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "fuaz.jpeg",
       "type": "image/png",
       "sizes": "512x512"
     }
