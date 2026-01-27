@@ -182,9 +182,8 @@ export function FUAZIDCardSuite() {
 
   const getPhotoUrl = (data: CardData) => {
     if (data.photoFile) return data.photoFile
-    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.photoSeed}${
-      'status' in data ? '&clothing=blazerAndShirt' : ''
-    }`
+    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.photoSeed}${'status' in data ? '&clothing=blazerAndShirt' : ''
+      }`
   }
 
   return (
@@ -208,21 +207,19 @@ export function FUAZIDCardSuite() {
           <div className="flex bg-gray-100 p-1.5 rounded-xl gap-1.5">
             <button
               onClick={() => setActiveForm('student')}
-              className={`px-5 py-2 rounded-lg font-bold transition-all ${
-                activeForm === 'student'
-                  ? 'bg-white shadow-md text-green-800'
-                  : 'bg-transparent text-gray-600'
-              }`}
+              className={`px-5 py-2 rounded-lg font-bold transition-all ${activeForm === 'student'
+                ? 'bg-white shadow-md text-green-800'
+                : 'bg-transparent text-gray-600'
+                }`}
             >
               Student
             </button>
             <button
               onClick={() => setActiveForm('staff')}
-              className={`px-5 py-2 rounded-lg font-bold transition-all ${
-                activeForm === 'staff'
-                  ? 'bg-white shadow-md text-green-800'
-                  : 'bg-transparent text-gray-600'
-              }`}
+              className={`px-5 py-2 rounded-lg font-bold transition-all ${activeForm === 'staff'
+                ? 'bg-white shadow-md text-green-800'
+                : 'bg-transparent text-gray-600'
+                }`}
             >
               Staff
             </button>
@@ -967,7 +964,7 @@ function StudentCard({
                   <div className="text-[9px] font-extrabold text-gray-600 uppercase mb-0 whitespace-nowrap">
                     DEPT/UNIT
                   </div>
-                  <div className="text-[11px] font-extrabold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
+                  <div className="text-[12px] font-extrabold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                     {data.dept}
                   </div>
                 </div>
@@ -976,7 +973,7 @@ function StudentCard({
                   <div className="text-[9px] font-extrabold text-gray-600 uppercase mb-0 whitespace-nowrap">
                     NOK Number
                   </div>
-                  <div className="text-[11px] font-extrabold leading-tight whitespace-nowrap">
+                  <div className="text-[12px] font-extrabold leading-tight whitespace-nowrap">
                     {data.nok}
                   </div>
                 </div>
@@ -987,7 +984,7 @@ function StudentCard({
                     <div className="text-[9px] font-extrabold text-gray-600 uppercase mb-0 whitespace-nowrap">
                       BLOOD
                     </div>
-                    <div className="text-[11px] font-extrabold leading-tight text-red-700 whitespace-nowrap">
+                    <div className="text-[12px] font-extrabold leading-tight text-red-700 whitespace-nowrap">
                       {data.blood}
                     </div>
                   </div>
@@ -995,7 +992,7 @@ function StudentCard({
                     <div className="text-[9px] font-extrabold text-gray-600 uppercase mb-0 whitespace-nowrap">
                       VALID THRU
                     </div>
-                    <div className="text-[11px] font-extrabold leading-tight text-red-700 whitespace-nowrap">
+                    <div className="text-[12px] font-extrabold leading-tight text-red-700 whitespace-nowrap">
                       {data.valid}
                     </div>
                   </div>
