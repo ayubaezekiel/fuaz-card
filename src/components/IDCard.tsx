@@ -888,7 +888,7 @@ function StudentCard({
               <div className="text-[13px] font-extrabold uppercase mb-0 leading-tight">
                 FEDERAL UNIVERSITY OF AGRICULTURE ZURU
               </div>
-              <div className="text-[8px] opacity-90 font-medium">
+              <div className="text-[12px] opacity-90 font-medium">
                 P.M.B 28, ZURU, KEBBI STATE
               </div>
             </div>
